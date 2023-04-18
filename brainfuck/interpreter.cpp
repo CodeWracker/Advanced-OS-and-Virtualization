@@ -18,6 +18,10 @@ vector<char> fileReader(string name)
     for (char ch : line)
     {
         // cout << ch << endl;
+        if (ch == '\n' || ch == ' ')
+        {
+            continue;
+        }
         instructions.push_back(ch);
     }
 
