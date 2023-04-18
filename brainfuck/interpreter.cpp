@@ -12,17 +12,19 @@ vector<char> fileReader(string name)
     ifstream file("tests/" + name);
     string line;
     vector<char> instructions;
-    getline(file, line);
     // cout << line << endl;
 
-    for (char ch : line)
+    while (getline(file, line))
     {
-        // cout << ch << endl;
-        if (ch == '\n' || ch == ' ')
+        for (char ch : line)
         {
-            continue;
+            // cout << ch << endl;
+            if (ch == '\n' || ch == ' ')
+            {
+                continue;
+            }
+            instructions.push_back(ch);
         }
-        instructions.push_back(ch);
     }
 
     return instructions;
