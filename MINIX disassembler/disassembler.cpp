@@ -5,6 +5,8 @@
 #include <bitset>
 #include <iomanip>
 #include <sstream>
+#include "Instruction.hpp"
+#include "InstructionMap.hpp"
 using namespace std;
 
 vector<int> fileReader(string name)
@@ -17,34 +19,83 @@ vector<int> fileReader(string name)
     {
         while (getline(file, line))
         {
+
+            string opcode;
+            Instruction *inst;
+
             // printa o binário da linha
-            string s1, s2;
-            int i = 0;
+            vector<string> payload;
+            int byteCount = 0;
+            int payloadSize;
             for (char c : line)
             {
-                // cout << bitset<8>(c) << endl;
-                if (s2 != "")
+                if (byteCount < 32)
                 {
-                    s1 = "";
-                    s2 = "";
+                    byteCount++;
+                    continue;
                 }
 
-                if (s1 == "")
+                if (opcode == "")
                 {
-                    s1 = bitset<8>(c).to_string();
+                    opcode = bitset<8>(c).to_string();
+                    // find the opcode in the map, if not find print "not find"
+                    int opcodeCount = 8;
+                    string subOpcode = opcode.substr(0, opcodeCount);
+                    while (instructionMap.find(subOpcode) == instructionMap.end())
+                    {
+                        opcodeCount--;
+                        if (opcodeCount == 0)
+                        {
+                            cout << "not find" << endl;
+                            break;
+                        }
+                        subOpcode = opcode.substr(0, opcodeCount);
+                    }
+                    if (opcodeCount != 0)
+                    {
+                        inst = instructionMap.find(subOpcode)->second(opcode);
+                        cout << inst->name << endl;
+                        payloadSize = inst->size - 1;
+                    }
+                    else
+                    {
+                        opcode = "";
+                        continue;
+                    }
                 }
                 else
                 {
-                    s2 = bitset<8>(c).to_string();
-                    i++;
-                    if (i > 15)
+                    payload.push_back(bitset<8>(c).to_string());
+                    payloadSize--;
+                    if (payloadSize == 0)
                     {
-                        cout << s1 << " " << s2 << " / ";
-                        stringstream ss;
-                        ss << hex << stoll(s1 + s2, NULL, 2);
-                        cout << ss.str() << endl;
+                        opcode = "";
                     }
                 }
+
+                // cout << bitset<8>(c) << endl;
+                // if (s2 != "")
+                //{
+                //   s1 = "";
+                //   s2 = "";
+                //}
+
+                // if (s1 == "")
+                //{
+                //    s1 = bitset<8>(c).to_string();
+                //}
+                // else
+                //{
+                //  s2 = bitset<8>(c).to_string();
+                //  i++;
+                // if (i > 15)
+                // {
+                //    cout << s1 << " " << s2 << " / ";
+                //   stringstream ss;
+                //   ss << hex << stoll(s1 + s2, NULL, 2);
+                //   cout << ss.str() << endl;
+                ////}
+                //}
             }
         }
         file.close();
