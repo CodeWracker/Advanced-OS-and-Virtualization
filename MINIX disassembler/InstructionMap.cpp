@@ -7,4 +7,7 @@ map<string, Instruction *(*)(string)> instructionMap = {
     {"1010000", &createMOV},
     {"1010001", &createMOV},
     {"10001110", &createMOV},
-    {"10001100", &createMOV}};
+    {"10001100", &createMOV},
+    {"11111111", &createPUSH},
+    {"01011", &createPUSH},
+    {"000", &createPUSH}};

@@ -37,10 +37,19 @@ vector<int> fileReader(string name)
 
                 if (opcode == "")
                 {
+                    cout << endl;
                     opcode = bitset<8>(c).to_string();
-                    // find the opcode in the map, if not find print "not find"
+
+                    // rest the payload vector
+                    payload.clear();
+
+                    // stringstream s1;
+                    //  s1 << hex << stoll(opcode, NULL, 2);
+                    //  cout << s1.str() << " ";
+                    //   find the opcode in the map, if not find print "not find"
                     int opcodeCount = 8;
                     string subOpcode = opcode.substr(0, opcodeCount);
+                    cout << "procurando: " << subOpcode << endl;
                     while (instructionMap.find(subOpcode) == instructionMap.end())
                     {
                         opcodeCount--;
@@ -50,12 +59,18 @@ vector<int> fileReader(string name)
                             break;
                         }
                         subOpcode = opcode.substr(0, opcodeCount);
+                        // cout << "procurando: " << subOpcode << endl;
                     }
                     if (opcodeCount != 0)
                     {
                         inst = instructionMap.find(subOpcode)->second(opcode);
-                        cout << inst->name << endl;
+                        // cout << inst->name << "(" << inst->size << ") ";
                         payloadSize = inst->size - 1;
+                        if (payloadSize == 0)
+                        {
+                            opcode = "";
+                            continue;
+                        }
                     }
                     else
                     {
@@ -65,11 +80,18 @@ vector<int> fileReader(string name)
                 }
                 else
                 {
-                    payload.push_back(bitset<8>(c).to_string());
+                    string cmdBinary = bitset<8>(c).to_string();
+                    payload.push_back(cmdBinary);
+                    // printa o hexadecimal do cmdBinary
+                    // stringstream ss;
+                    // ss << hex << stoll(cmdBinary, NULL, 2);
+                    // cout << ss.str() << " ";
                     payloadSize--;
                     if (payloadSize == 0)
                     {
+                        inst->setPayload(payload);
                         opcode = "";
+                        cout << inst->getHex() << " " << inst->name << endl;
                     }
                 }
 

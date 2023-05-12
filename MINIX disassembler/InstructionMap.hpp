@@ -12,6 +12,10 @@ inline Instruction *createMOV(string opcode)
 {
     return new MOV(opcode);
 }
+inline Instruction *createPUSH(string opcode)
+{
+    return new PUSH(opcode);
+}
 extern map<string, Instruction *(*)(string)> instructionMap;
 
 // createMOV
