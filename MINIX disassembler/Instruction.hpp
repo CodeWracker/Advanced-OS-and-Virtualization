@@ -83,6 +83,7 @@ public:
     ~Instruction(){};
 };
 
+// data transfer cmds
 class MOV : public Instruction
 {
 
@@ -165,6 +166,182 @@ public:
     ~PUSH(){};
 };
 
+class POP : public Instruction
+{
+public:
+    POP(string opcode)
+    {
+        this->name = "POP";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 5) == "01011")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else if (opcode.substr(0, 5) == "000")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else
+        {
+            this->mod = opcode.substr(2, 2);
+            this->rm = opcode.substr(4, 3);
+            this->size = 2;
+        }
+    }
+};
+
+class XCHG : public Instruction
+{
+public:
+    XCHG(string opcode)
+    {
+        this->name = "XCHG";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 5) == "10010")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else
+        {
+            this->mod = opcode.substr(2, 2);
+            this->rm = opcode.substr(4, 3);
+            this->size = 2;
+        }
+    }
+};
+
+class IN : public Instruction
+{
+public:
+    IN(string opcode)
+    {
+        this->name = "IN";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 7) == "1110010")
+        {
+            this->size = 2;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+};
+
+class OUT : public Instruction
+{
+public:
+    OUT(string opcode)
+    {
+        this->name = "OUT";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 7) == "1110011")
+        {
+            this->size = 2;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+};
+
+class XLAT : public Instruction
+{
+public:
+    XLAT(string opcode)
+    {
+        this->name = "XLAT";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class LEA : public Instruction
+{
+public:
+    LEA(string opcode)
+    {
+        this->name = "LEA";
+        this->opcode = opcode;
+        this->size = 2 + 1;
+    }
+};
+
+class LDS : public Instruction
+{
+public:
+    LDS(string opcode)
+    {
+        this->name = "LDS";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+};
+
+class LES : public Instruction
+{
+public:
+    LES(string opcode)
+    {
+        this->name = "LES";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+};
+
+class LAHF : public Instruction
+{
+public:
+    LAHF(string opcode)
+    {
+        this->name = "LAHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class SAHF : public Instruction
+{
+public:
+    SAHF(string opcode)
+    {
+        this->name = "SAHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class PUSHF : public Instruction
+{
+public:
+    PUSHF(string opcode)
+    {
+        this->name = "PUSHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class POPF : public Instruction
+{
+public:
+    POPF(string opcode)
+    {
+        this->name = "POPF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+// arithmetic commands
 class ADD : public Instruction
 {
 public:
@@ -544,181 +721,6 @@ public:
     CWD(string opcode)
     {
         this->name = "CWD";
-        this->opcode = opcode;
-        this->size = 1;
-    }
-};
-
-class POP : public Instruction
-{
-public:
-    POP(string opcode)
-    {
-        this->name = "POP";
-        this->opcode = opcode;
-
-        if (opcode.substr(0, 5) == "01011")
-        {
-            this->reg = opcode.substr(5, 3);
-            this->size = 1;
-        }
-        else if (opcode.substr(0, 5) == "000")
-        {
-            this->reg = opcode.substr(5, 3);
-            this->size = 1;
-        }
-        else
-        {
-            this->mod = opcode.substr(2, 2);
-            this->rm = opcode.substr(4, 3);
-            this->size = 2;
-        }
-    }
-};
-
-class XCHG : public Instruction
-{
-public:
-    XCHG(string opcode)
-    {
-        this->name = "XCHG";
-        this->opcode = opcode;
-
-        if (opcode.substr(0, 5) == "10010")
-        {
-            this->reg = opcode.substr(5, 3);
-            this->size = 1;
-        }
-        else
-        {
-            this->mod = opcode.substr(2, 2);
-            this->rm = opcode.substr(4, 3);
-            this->size = 2;
-        }
-    }
-};
-
-class IN : public Instruction
-{
-public:
-    IN(string opcode)
-    {
-        this->name = "IN";
-        this->opcode = opcode;
-
-        if (opcode.substr(0, 7) == "1110010")
-        {
-            this->size = 2;
-        }
-        else
-        {
-            this->size = 2;
-        }
-    }
-};
-
-class OUT : public Instruction
-{
-public:
-    OUT(string opcode)
-    {
-        this->name = "OUT";
-        this->opcode = opcode;
-
-        if (opcode.substr(0, 7) == "1110011")
-        {
-            this->size = 2;
-        }
-        else
-        {
-            this->size = 2;
-        }
-    }
-};
-
-class XLAT : public Instruction
-{
-public:
-    XLAT(string opcode)
-    {
-        this->name = "XLAT";
-        this->opcode = opcode;
-        this->size = 1;
-    }
-};
-
-class LEA : public Instruction
-{
-public:
-    LEA(string opcode)
-    {
-        this->name = "LEA";
-        this->opcode = opcode;
-        this->size = 2 + 1;
-    }
-};
-
-class LDS : public Instruction
-{
-public:
-    LDS(string opcode)
-    {
-        this->name = "LDS";
-        this->opcode = opcode;
-        this->size = 2;
-    }
-};
-
-class LES : public Instruction
-{
-public:
-    LES(string opcode)
-    {
-        this->name = "LES";
-        this->opcode = opcode;
-        this->size = 2;
-    }
-};
-
-class LAHF : public Instruction
-{
-public:
-    LAHF(string opcode)
-    {
-        this->name = "LAHF";
-        this->opcode = opcode;
-        this->size = 1;
-    }
-};
-
-class SAHF : public Instruction
-{
-public:
-    SAHF(string opcode)
-    {
-        this->name = "SAHF";
-        this->opcode = opcode;
-        this->size = 1;
-    }
-};
-
-class PUSHF : public Instruction
-{
-public:
-    PUSHF(string opcode)
-    {
-        this->name = "PUSHF";
-        this->opcode = opcode;
-        this->size = 1;
-    }
-};
-
-class POPF : public Instruction
-{
-public:
-    POPF(string opcode)
-    {
-        this->name = "POPF";
         this->opcode = opcode;
         this->size = 1;
     }
