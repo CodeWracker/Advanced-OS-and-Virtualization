@@ -14,7 +14,7 @@ vector<int> fileReader(string name)
     ifstream file(name);
     string line;
     vector<int> instructions;
-
+    int address = 0;
     if (file.is_open())
     {
         while (getline(file, line))
@@ -89,9 +89,12 @@ vector<int> fileReader(string name)
                     payloadSize--;
                     if (payloadSize == 0)
                     {
+                        inst->setAddress(address);
+                        address += inst->size;
+
                         inst->setPayload(payload);
                         opcode = "";
-                        cout << inst->getHex() << " " << inst->name;
+                        cout << inst->getHexAddr() << ": " << inst->getHex() << " " << inst->name;
                     }
                 }
 

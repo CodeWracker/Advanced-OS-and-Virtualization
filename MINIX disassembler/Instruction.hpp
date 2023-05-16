@@ -22,6 +22,7 @@ public:
     string reg;
     string mod;
     string rm;
+    int address;
 
     vector<string> payload;
 
@@ -37,7 +38,18 @@ public:
     {
         this->payload = payload;
     };
-
+    void setAddress(int addr)
+    {
+        this->address = addr;
+    }
+    string getHexAddr()
+    {
+        // return the hex code for the addr number using 2 bytes
+        stringstream stream;
+        stream << setfill('0') << setw(sizeof(int))
+               << hex << this->address;
+        return stream.str();
+    }
     string getHex()
     {
         string hexstr = "";
