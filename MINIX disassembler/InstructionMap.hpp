@@ -105,6 +105,66 @@ inline Instruction *createCWD(string opcode)
     return new CWD(opcode);
 }
 
+inline Instruction *createPOP(string opcode)
+{
+    return new POP(opcode);
+}
+
+inline Instruction *createXCHG(string opcode)
+{
+    return new XCHG(opcode);
+}
+
+inline Instruction *createIN(string opcode)
+{
+    return new IN(opcode);
+}
+
+inline Instruction *createOUT(string opcode)
+{
+    return new OUT(opcode);
+}
+
+inline Instruction *createXLAT(string opcode)
+{
+    return new XLAT(opcode);
+}
+
+inline Instruction *createLEA(string opcode)
+{
+    return new LEA(opcode);
+}
+
+inline Instruction *createLDS(string opcode)
+{
+    return new LDS(opcode);
+}
+
+inline Instruction *createLES(string opcode)
+{
+    return new LES(opcode);
+}
+
+inline Instruction *createLAHF(string opcode)
+{
+    return new LAHF(opcode);
+}
+
+inline Instruction *createSAHF(string opcode)
+{
+    return new SAHF(opcode);
+}
+
+inline Instruction *createPUSHF(string opcode)
+{
+    return new PUSHF(opcode);
+}
+
+inline Instruction *createPOPF(string opcode)
+{
+    return new POPF(opcode);
+}
+
 extern map<string, Instruction *(*)(string)> instructionMap;
 
 // createMOV

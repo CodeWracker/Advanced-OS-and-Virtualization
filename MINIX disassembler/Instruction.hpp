@@ -43,12 +43,22 @@ public:
         string hexstr = "";
         stringstream s;
         s << hex << stoll(this->opcode, NULL, 2);
+        // verify if s has 2 chars
+        if (s.str().size() == 1)
+        {
+            s.str("0" + s.str());
+        }
         hexstr = hexstr + s.str();
 
         for (string str : this->payload)
         {
             stringstream s1;
             s1 << hex << stoll(str, NULL, 2);
+            // verify if s1 has 2 chars
+            if (s1.str().size() == 1)
+            {
+                s1.str("0" + s1.str());
+            }
             hexstr = hexstr + s1.str();
         }
 
@@ -87,7 +97,7 @@ public:
         {
             this->w = opcode[4];
             this->reg = opcode.substr(5, 3);
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -105,7 +115,7 @@ public:
         else // immediate to register memmory
         {
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -162,7 +172,7 @@ public:
         { // immediate to reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -174,7 +184,7 @@ public:
         else
         { // immediate to acc
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -205,7 +215,7 @@ public:
         { // immediate to reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -217,7 +227,7 @@ public:
         else
         { // immediate to acc with carry
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -293,7 +303,7 @@ public:
         { // immediate from reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -305,7 +315,7 @@ public:
         else
         { // immediate from acc
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -335,7 +345,7 @@ public:
         { // immediate from reg/mem with borrow
             this->s = opcode[6];
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -347,7 +357,7 @@ public:
         else
         { // immediate from acc with borrow (WRONG!)
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -416,7 +426,7 @@ public:
         { // immediate with reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 4;
             }
@@ -428,7 +438,7 @@ public:
         else
         { // immediate with acc
             this->w = opcode[7];
-            if (w == 1)
+            if (w == '1')
             {
                 this->size = 3;
             }
@@ -526,4 +536,180 @@ public:
         this->size = 1;
     }
 };
+
+class POP : public Instruction
+{
+public:
+    POP(string opcode)
+    {
+        this->name = "POP";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 5) == "01011")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else if (opcode.substr(0, 5) == "000")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else
+        {
+            this->mod = opcode.substr(2, 2);
+            this->rm = opcode.substr(4, 3);
+            this->size = 2;
+        }
+    }
+};
+
+class XCHG : public Instruction
+{
+public:
+    XCHG(string opcode)
+    {
+        this->name = "XCHG";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 5) == "10010")
+        {
+            this->reg = opcode.substr(5, 3);
+            this->size = 1;
+        }
+        else
+        {
+            this->mod = opcode.substr(2, 2);
+            this->rm = opcode.substr(4, 3);
+            this->size = 2;
+        }
+    }
+};
+
+class IN : public Instruction
+{
+public:
+    IN(string opcode)
+    {
+        this->name = "IN";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 7) == "1110010")
+        {
+            this->size = 2;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+};
+
+class OUT : public Instruction
+{
+public:
+    OUT(string opcode)
+    {
+        this->name = "OUT";
+        this->opcode = opcode;
+
+        if (opcode.substr(0, 7) == "1110011")
+        {
+            this->size = 2;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+};
+
+class XLAT : public Instruction
+{
+public:
+    XLAT(string opcode)
+    {
+        this->name = "XLAT";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class LEA : public Instruction
+{
+public:
+    LEA(string opcode)
+    {
+        this->name = "LEA";
+        this->opcode = opcode;
+        this->size = 2 + 1;
+    }
+};
+
+class LDS : public Instruction
+{
+public:
+    LDS(string opcode)
+    {
+        this->name = "LDS";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+};
+
+class LES : public Instruction
+{
+public:
+    LES(string opcode)
+    {
+        this->name = "LES";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+};
+
+class LAHF : public Instruction
+{
+public:
+    LAHF(string opcode)
+    {
+        this->name = "LAHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class SAHF : public Instruction
+{
+public:
+    SAHF(string opcode)
+    {
+        this->name = "SAHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class PUSHF : public Instruction
+{
+public:
+    PUSHF(string opcode)
+    {
+        this->name = "PUSHF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
+class POPF : public Instruction
+{
+public:
+    POPF(string opcode)
+    {
+        this->name = "POPF";
+        this->opcode = opcode;
+        this->size = 1;
+    }
+};
+
 #endif

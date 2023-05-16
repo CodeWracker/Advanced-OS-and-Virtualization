@@ -49,7 +49,7 @@ vector<int> fileReader(string name)
                     //   find the opcode in the map, if not find print "not find"
                     int opcodeCount = 8;
                     string subOpcode = opcode.substr(0, opcodeCount);
-                    cout << "procurando: " << subOpcode << endl;
+                    // cout << "procurando: " << subOpcode << endl;
                     while (instructionMap.find(subOpcode) == instructionMap.end())
                     {
                         opcodeCount--;
@@ -91,7 +91,7 @@ vector<int> fileReader(string name)
                     {
                         inst->setPayload(payload);
                         opcode = "";
-                        cout << inst->getHex() << " " << inst->name << endl;
+                        cout << inst->getHex() << " " << inst->name;
                     }
                 }
 
