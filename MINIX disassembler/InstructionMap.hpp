@@ -165,6 +165,13 @@ inline Instruction *createPOPF(string opcode)
     return new POPF(opcode);
 }
 
+inline Instruction *checkADDandCMP(string opcode)
+{
+    Conflict *inst = new Conflict(opcode);
+    inst->size = 4;
+    inst->setType(ConflictTypesEnum::ADDCMP);
+    return inst;
+}
 extern map<string, Instruction *(*)(string)> instructionMap;
 
 // createMOV

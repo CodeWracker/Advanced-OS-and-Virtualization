@@ -8,6 +8,7 @@
 #include <bitset>
 #include <iomanip>
 #include <sstream>
+#include <map>
 using namespace std;
 
 class Instruction
@@ -80,7 +81,27 @@ public:
     {
         return this->name;
     }
-    ~Instruction(){};
+    virtual ~Instruction(){};
+};
+
+// enum of the conflicts types
+enum class ConflictTypesEnum
+{
+    ADDCMP
+};
+class Conflict : public Instruction
+{
+public:
+    ConflictTypesEnum type;
+    Conflict(string opcode)
+    {
+        this->opcode = opcode;
+    }
+    void setType(ConflictTypesEnum tp)
+    {
+
+        this->type = tp;
+    }
 };
 
 // data transfer cmds

@@ -93,6 +93,31 @@ vector<int> fileReader(string name)
                         address += inst->size;
 
                         inst->setPayload(payload);
+
+                        // check for conflicts
+                        // verify if inst is of the Instruction type
+                        if ((dynamic_cast<Conflict *>(inst)))
+                        {
+
+                            Conflict *conflict = dynamic_cast<Conflict *>(inst);
+                            if (conflict->type == ConflictTypesEnum::ADDCMP)
+                            {
+                                string p1 = payload[0];
+                                if (p1.substr(2, 3) == "000")
+                                {
+                                    free(inst);
+                                    inst = createADD(opcode);
+                                    inst->setPayload(payload);
+                                }
+                                else
+                                {
+                                    free(inst);
+                                    inst = createCMP(opcode);
+                                    inst->setPayload(payload);
+                                }
+                            }
+                        }
+
                         opcode = "";
                         cout << inst->getHexAddr() << ": " << inst->getHex() << " " << inst->name;
                     }
