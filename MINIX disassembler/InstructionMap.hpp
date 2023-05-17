@@ -172,6 +172,75 @@ inline Instruction *checkADDandCMP(string opcode)
     inst->setType(ConflictTypesEnum::ADDCMP);
     return inst;
 }
+
+inline Instruction *createNOT(string opcode)
+{
+    return new NOT(opcode);
+}
+
+inline Instruction *createShift(string opcode)
+{
+    Conflict *inst = new Conflict(opcode);
+    inst->size = 4;
+    inst->setType(ConflictTypesEnum::SHIFT);
+    return inst;
+}
+
+inline Instruction *createAnd(string opcode)
+{
+    return new AND(opcode);
+}
+
+inline Instruction *createTest(string opcode)
+{
+    return new TEST(opcode);
+}
+
+inline Instruction *createOr(string opcode)
+{
+    return new OR(opcode);
+}
+
+inline Instruction *createXor(string opcode)
+{
+    return new XOR(opcode);
+}
+
+inline Instruction *createREP(string opcode)
+{
+    return new REP(opcode);
+}
+
+inline Instruction *createMOVS(string opcode)
+{
+    return new MOVS(opcode);
+}
+
+inline Instruction *createCMPS(string opcode)
+{
+    return new CMPS(opcode);
+}
+
+inline Instruction *createSCAS(string opcode)
+{
+    return new SCAS(opcode);
+}
+
+inline Instruction *createLODS(string opcode)
+{
+    return new LODS(opcode);
+}
+
+inline Instruction *createSTOS(string opcode)
+{
+    return new STOS(opcode);
+}
+
+inline Instruction *createCALL(string opcode)
+{
+    return new CALL(opcode);
+}
+
 extern map<string, Instruction *(*)(string)> instructionMap;
 
 // createMOV

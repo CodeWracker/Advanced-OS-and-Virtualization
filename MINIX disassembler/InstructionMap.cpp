@@ -56,4 +56,32 @@ map<string, Instruction *(*)(string)> instructionMap = {
     {"10011111", &createLAHF},
     {"10011110", &createSAHF},
     {"10011100", &createPUSHF},
-    {"10011101", &createPOPF}};
+    {"10011101", &createPOPF},
+
+    {"1111011", &createNOT},
+    {"110100", &createShift},
+    {"001000", &createAnd},
+    {"1000000", &createAnd},
+    {"0010010", &createAnd},
+    {"1000010", &createTest},
+    {"1111011", &createTest},
+    {"1010100", &createTest},
+    {"000010", &createOr},
+    {"1000000", &createOr},
+    {"0000110", &createOr},
+    {"001100", &createXor},
+    {"1000000", &createXor},
+    {"0011010", &createXor},
+    {"1111001", &createREP},
+    {"1010010", &createMOVS},
+    {"1010011", &createCMPS},
+
+    {"1010111", &createSCAS},
+    {"1010110", &createLODS},
+    {"1010101", &createSTOS},
+    {"11101000", &createCALL},
+    {"11111111", &createCALL},
+    {"10011010", &createCALL},
+    {"11111111", &createCALL}
+
+};

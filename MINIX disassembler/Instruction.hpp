@@ -17,9 +17,7 @@ public:
     string name;
     string opcode;
     int size;
-    char d;
-    char w;
-    char s;
+    char d, w, s, z;
     string reg;
     string mod;
     string rm;
@@ -87,7 +85,8 @@ public:
 // enum of the conflicts types
 enum class ConflictTypesEnum
 {
-    ADDCMP
+    ADDCMP,
+    SHIFT
 };
 class Conflict : public Instruction
 {
@@ -744,6 +743,272 @@ public:
         this->name = "CWD";
         this->opcode = opcode;
         this->size = 1;
+    }
+};
+
+// logic instructions
+class NOT : public Instruction
+{
+public:
+    NOT(string opcode)
+    {
+        this->name = "NOT";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+};
+
+// class Shift : public Instruction
+// {
+// public:
+//     Shift(string opcode)
+//     {
+//         this->name = "Shift";
+//         this->opcode = opcode;
+//         this->size = 2;
+//     }
+// };
+
+class AND : public Instruction
+{
+public:
+    AND(string opcode)
+    {
+        this->name = "AND";
+        this->opcode = opcode;
+        if (opcode.substr(0, 6) == "001000")
+        {
+            this->d = opcode[6];
+            this->w = opcode[7];
+            this->size = 2;
+        }
+        else if (opcode.substr(0, 6) == "100000")
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 4;
+            }
+            else
+            {
+                this->size = 3;
+            }
+        }
+        else
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 3;
+            }
+            else
+            {
+                this->size = 2;
+            }
+        }
+    };
+};
+
+class TEST : public Instruction
+{
+public:
+    TEST(string opcode)
+    {
+        this->name = "TEST";
+        this->opcode = opcode;
+        if (opcode.substr(0, 7) == "1000010")
+        {
+            this->w = opcode[7];
+            this->size = 2;
+        }
+        else if (opcode.substr(0, 7) == "1111011")
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 4;
+            }
+            else
+            {
+                this->size = 3;
+            }
+        }
+        else
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 3;
+            }
+            else
+            {
+                this->size = 2;
+            }
+        }
+    }
+};
+
+class OR : public Instruction
+{
+public:
+    OR(string opcode)
+    {
+        this->name = "OR";
+        this->opcode = opcode;
+        if (opcode.substr(0, 6) == "000010")
+        {
+            this->d = opcode[6];
+            this->w = opcode[7];
+            this->size = 2;
+        }
+        else if (opcode.substr(0, 7) == "1000000")
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 4;
+            }
+            else
+            {
+                this->size = 3;
+            }
+        }
+        else
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 3;
+            }
+            else
+            {
+                this->size = 2;
+            }
+        }
+    }
+};
+
+class XOR : public Instruction
+{
+public:
+    XOR(string opcode)
+    {
+        this->name = "XOR";
+        this->opcode = opcode;
+        if (opcode.substr(0, 6) == "001100")
+        {
+            this->d = opcode[6];
+            this->w = opcode[7];
+            this->size = 2;
+        }
+        else if (opcode.substr(0, 7) == "1000000")
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 4;
+            }
+            else
+            {
+                this->size = 3;
+            }
+        }
+        else
+        {
+            this->w = opcode[7];
+            if (w == '1')
+            {
+                this->size = 3;
+            }
+            else
+            {
+                this->size = 2;
+            }
+        }
+    }
+};
+
+class REP : public Instruction
+{
+public:
+    REP(string opcode)
+    {
+        this->name = "REP";
+        this->opcode = opcode;
+        this->size = 2;
+        this->z = opcode[7];
+    }
+};
+
+class MOVS : public Instruction
+{
+public:
+    MOVS(string opcode)
+    {
+        this->name = "MOVS";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
+    }
+};
+
+class CMPS : public Instruction
+{
+public:
+    CMPS(string opcode)
+    {
+        this->name = "CMPS";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
+    }
+};
+
+class SCAS : public Instruction
+{
+public:
+    SCAS(string opcode)
+    {
+        this->name = "SCAS";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
+    }
+};
+
+class LODS : public Instruction
+{
+public:
+    LODS(string opcode)
+    {
+        this->name = "LODS";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
+    }
+};
+
+class STOS : public Instruction
+{
+public:
+    STOS(string opcode)
+    {
+        this->name = "STOS";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
+    }
+};
+
+class CALL : public Instruction
+{
+public:
+    CALL(string opcode)
+    {
+        this->name = "CALL";
+        this->opcode = opcode;
+        this->size = 2;
+        this->w = opcode[7];
     }
 };
 
