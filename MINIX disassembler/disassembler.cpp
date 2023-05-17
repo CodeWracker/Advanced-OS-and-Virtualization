@@ -179,7 +179,13 @@ vector<int> fileReader(string name)
                         }
 
                         opcode = "";
-                        cout << inst->getHexAddr() << ": " << inst->getHex() << " " << inst->name;
+                        string out = inst->getHexAddr() + ": " + inst->getHex();
+                        // make the out have 20 chars (complete with " ")
+                        while (out.size() < 20)
+                        {
+                            out += " ";
+                        }
+                        cout << out << inst->name;
                     }
                 }
 
