@@ -100,21 +100,81 @@ vector<int> fileReader(string name)
                         {
 
                             Conflict *conflict = dynamic_cast<Conflict *>(inst);
-                            if (conflict->type == ConflictTypesEnum::ADDCMP)
+                            if (conflict->type == ConflictTypesEnum::SHIFT)
                             {
                                 string p1 = payload[0];
+                                free(inst);
+                                if (p1.substr(2, 3) == "100")
+                                {
+                                    inst = createSHL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "101")
+                                {
+                                    inst = createSHR(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "111")
+                                {
+                                    inst = createSAR(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "000")
+                                {
+                                    inst = createROL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "001")
+                                {
+                                    inst = createROR(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "010")
+                                {
+                                    inst = createRCL(opcode);
+                                }
+                                else // 011
+                                {
+                                    inst = createRCR(opcode);
+                                }
+
+                                inst->setPayload(payload);
+                            }
+                            else if (conflict->type == ConflictTypesEnum::BIT7_1)
+                            {
+                                string p1 = payload[0];
+
+                                free(inst);
                                 if (p1.substr(2, 3) == "000")
                                 {
-                                    free(inst);
                                     inst = createADD(opcode);
-                                    inst->setPayload(payload);
                                 }
-                                else
+                                else if (p1.substr(2, 3) == "010")
                                 {
-                                    free(inst);
+                                    inst = createADC(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "101")
+                                {
+                                    inst = createSUB(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "011")
+                                {
+                                    inst = createSSB(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "111")
+                                {
                                     inst = createCMP(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "100")
+                                {
+                                    inst = createAND(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "001")
+                                {
+                                    inst = createOR(opcode);
                                     inst->setPayload(payload);
                                 }
+                                else // 110
+                                {
+                                    inst = createXOR(opcode);
+                                }
+
+                                inst->setPayload(payload);
                             }
                         }
 

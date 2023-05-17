@@ -165,11 +165,11 @@ inline Instruction *createPOPF(string opcode)
     return new POPF(opcode);
 }
 
-inline Instruction *checkADDandCMP(string opcode)
+inline Instruction *checkConflict(string opcode)
 {
     Conflict *inst = new Conflict(opcode);
     inst->size = 4;
-    inst->setType(ConflictTypesEnum::ADDCMP);
+    inst->setType(ConflictTypesEnum::BIT7_1);
     return inst;
 }
 
@@ -186,22 +186,57 @@ inline Instruction *createShift(string opcode)
     return inst;
 }
 
-inline Instruction *createAnd(string opcode)
+inline Instruction *createSHL(string opcode)
+{
+    return new SHL(opcode);
+}
+
+inline Instruction *createSHR(string opcode)
+{
+    return new SHR(opcode);
+}
+
+inline Instruction *createSAR(string opcode)
+{
+    return new SAR(opcode);
+}
+
+inline Instruction *createROL(string opcode)
+{
+    return new ROL(opcode);
+}
+
+inline Instruction *createROR(string opcode)
+{
+    return new ROR(opcode);
+}
+
+inline Instruction *createRCL(string opcode)
+{
+    return new RCL(opcode);
+}
+
+inline Instruction *createRCR(string opcode)
+{
+    return new RCR(opcode);
+}
+
+inline Instruction *createAND(string opcode)
 {
     return new AND(opcode);
 }
 
-inline Instruction *createTest(string opcode)
+inline Instruction *createTEST(string opcode)
 {
     return new TEST(opcode);
 }
 
-inline Instruction *createOr(string opcode)
+inline Instruction *createOR(string opcode)
 {
     return new OR(opcode);
 }
 
-inline Instruction *createXor(string opcode)
+inline Instruction *createXOR(string opcode)
 {
     return new XOR(opcode);
 }

@@ -17,7 +17,7 @@ public:
     string name;
     string opcode;
     int size;
-    char d, w, s, z;
+    char d, w, s, z, v;
     string reg;
     string mod;
     string rm;
@@ -85,7 +85,7 @@ public:
 // enum of the conflicts types
 enum class ConflictTypesEnum
 {
-    ADDCMP,
+    BIT7_1,
     SHIFT
 };
 class Conflict : public Instruction
@@ -747,6 +747,103 @@ public:
 };
 
 // logic instructions
+class SHIFT : public Instruction
+{
+public:
+    SHIFT(){};
+    SHIFT(string opcode)
+    {
+        this->name = "SHIFT";
+        this->opcode = opcode;
+        this->size = 2;
+    }
+    void getArgs()
+    {
+        this->v = opcode[6];
+        this->w = opcode[7];
+    }
+
+    virtual ~SHIFT(){};
+};
+class SHL : public SHIFT
+{
+public:
+    SHL(string opcode)
+    {
+        this->name = "SHL";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+// create classes for all the shift instructions: SHR,SAR,ROL,ROR.RCL and RCR
+class SHR : public SHIFT
+{
+public:
+    SHR(string opcode)
+    {
+        this->name = "SHR";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+class SAR : public SHIFT
+{
+public:
+    SAR(string opcode)
+    {
+        this->name = "SAR";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+class ROL : public SHIFT
+{
+public:
+    ROL(string opcode)
+    {
+        this->name = "ROL";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+class ROR : public SHIFT
+{
+public:
+    ROR(string opcode)
+    {
+        this->name = "ROR";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+class RCL : public SHIFT
+{
+public:
+    RCL(string opcode)
+    {
+        this->name = "RCL";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+class RCR : public SHIFT
+{
+public:
+    RCR(string opcode)
+    {
+        this->name = "RCR";
+        this->opcode = opcode;
+        this->size = 2;
+        this->getArgs();
+    }
+};
+
 class NOT : public Instruction
 {
 public:
