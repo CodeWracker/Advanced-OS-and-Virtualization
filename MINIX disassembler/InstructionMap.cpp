@@ -113,4 +113,17 @@ map<string, Instruction *(*)(string)> instructionMap = {
     {"11001101", &createINT},
     {"11001100", &createINT},
     {"11001110", &createINTO},
-    {"11001111", &createIRET}};
+    {"11001111", &createIRET},
+    {"11111000", &createCLC},  // CLC - Clear Carry
+    {"11110101", &createCMC},  // CMC - Complement Carry
+    {"11111001", &createSTC},  // STC - Set Carry
+    {"11111100", &createCLD},  // CLD - Clear Direction
+    {"11111101", &createSTD},  // STD - Set Direction
+    {"11111010", &createCLI},  // CLI - Clear Interrupt
+    {"11111011", &createSTI},  // STI - Set Interrupt
+    {"11110100", &createHLT},  // HLT - Halt
+    {"10011011", &createWAIT}, // WAIT - Wait
+    {"11011", &createESC},     // ESC - Escape (to External Device)
+    {"11110000", &createLOCK}  // LOCK - Bus Lock Prefix
+
+};

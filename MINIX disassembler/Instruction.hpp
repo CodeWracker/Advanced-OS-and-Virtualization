@@ -67,6 +67,7 @@ public:
     string getHex()
     {
         string hexstr = "";
+
         stringstream s;
         s << hex << stoll(this->opcode, NULL, 2);
         // verify if s has 2 chars
@@ -112,6 +113,7 @@ public:
     Conflict(string opcode)
     {
         this->opcode = opcode;
+        this->name = "CONFLICT";
     }
     void setType(ConflictTypesEnum tp)
     {
@@ -153,6 +155,11 @@ public:
             this->d = opcode[6];
             this->w = opcode[7];
             this->size = 2;
+            if (w == '1')
+            {
+                // word instruction
+                size = 4;
+            }
         }
         else // immediate to register memmory
         {
@@ -826,7 +833,6 @@ class TEST : public Instruction
 public:
     TEST(string opcode)
     {
-
         this->getBasicInfo("TEST", opcode);
         if (opcode.substr(0, 7) == "1000010")
         {
@@ -1249,6 +1255,117 @@ public:
     IRET(string opcode)
     {
         this->getBasicInfo("IRET", opcode);
+        this->size = 1;
+    }
+};
+
+// processor control cmds
+class CLC : public Instruction
+{
+public:
+    CLC(string opcode)
+    {
+        this->getBasicInfo("CLC", opcode);
+        this->size = 1;
+    }
+};
+
+class CMC : public Instruction
+{
+public:
+    CMC(string opcode)
+    {
+        this->getBasicInfo("CMC", opcode);
+        this->size = 1;
+    }
+};
+
+class STC : public Instruction
+{
+public:
+    STC(string opcode)
+    {
+        this->getBasicInfo("STC", opcode);
+        this->size = 1;
+    }
+};
+
+class CLD : public Instruction
+{
+public:
+    CLD(string opcode)
+    {
+        this->getBasicInfo("CLD", opcode);
+        this->size = 1;
+    }
+};
+
+class STD : public Instruction
+{
+public:
+    STD(string opcode)
+    {
+        this->getBasicInfo("STD", opcode);
+        this->size = 1;
+    }
+};
+
+class CLI : public Instruction
+{
+public:
+    CLI(string opcode)
+    {
+        this->getBasicInfo("CLI", opcode);
+        this->size = 1;
+    }
+};
+
+class STI : public Instruction
+{
+public:
+    STI(string opcode)
+    {
+        this->getBasicInfo("STI", opcode);
+        this->size = 1;
+    }
+};
+
+class HLT : public Instruction
+{
+public:
+    HLT(string opcode)
+    {
+        this->getBasicInfo("HLT", opcode);
+        this->size = 1;
+    }
+};
+
+class WAIT : public Instruction
+{
+public:
+    WAIT(string opcode)
+    {
+        this->getBasicInfo("WAIT", opcode);
+        this->size = 1;
+    }
+};
+
+class ESC : public Instruction
+{
+public:
+    ESC(string opcode)
+    {
+        this->getBasicInfo("ESC", opcode);
+        this->size = 2;
+    }
+};
+
+class LOCK : public Instruction
+{
+public:
+    LOCK(string opcode)
+    {
+        this->getBasicInfo("LOCK", opcode);
         this->size = 1;
     }
 };

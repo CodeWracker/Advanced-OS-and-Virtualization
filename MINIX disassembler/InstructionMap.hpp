@@ -297,6 +297,7 @@ inline Instruction *checkConflictTestMulOthers(string opcode)
     Conflict *inst = new Conflict(opcode);
     inst->size = 2;
     inst->setType(ConflictTypesEnum::TEST_MUL_OTHERS);
+    inst->name = "CONFLICT_TEST_MUL_OTHERS";
     return inst;
 }
 
@@ -423,6 +424,61 @@ inline Instruction *createINTO(string opcode)
 inline Instruction *createIRET(string opcode)
 {
     return new IRET(opcode);
+}
+
+inline Instruction *createCLC(string opcode)
+{
+    return new CLC(opcode);
+}
+
+inline Instruction *createCMC(string opcode)
+{
+    return new CMC(opcode);
+}
+
+inline Instruction *createSTC(string opcode)
+{
+    return new STC(opcode);
+}
+
+inline Instruction *createCLD(string opcode)
+{
+    return new CLD(opcode);
+}
+
+inline Instruction *createSTD(string opcode)
+{
+    return new STD(opcode);
+}
+
+inline Instruction *createCLI(string opcode)
+{
+    return new CLI(opcode);
+}
+
+inline Instruction *createSTI(string opcode)
+{
+    return new STI(opcode);
+}
+
+inline Instruction *createHLT(string opcode)
+{
+    return new HLT(opcode);
+}
+
+inline Instruction *createWAIT(string opcode)
+{
+    return new WAIT(opcode);
+}
+
+inline Instruction *createESC(string opcode)
+{
+    return new ESC(opcode);
+}
+
+inline Instruction *createLOCK(string opcode)
+{
+    return new LOCK(opcode);
 }
 
 extern map<string, Instruction *(*)(string)> instructionMap;
