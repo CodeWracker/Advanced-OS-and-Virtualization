@@ -79,6 +79,10 @@ inline Instruction *createMUL(string opcode)
 {
     return new MUL(opcode);
 }
+inline Instruction *createIMUL(string opcode)
+{
+    return new IMUL(opcode);
+}
 
 inline Instruction *createAAM(string opcode)
 {
@@ -88,6 +92,10 @@ inline Instruction *createAAM(string opcode)
 inline Instruction *createDIV(string opcode)
 {
     return new DIV(opcode);
+}
+inline Instruction *createIDIV(string opcode)
+{
+    return new IDIV(opcode);
 }
 
 inline Instruction *createAAD(string opcode)
@@ -165,7 +173,7 @@ inline Instruction *createPOPF(string opcode)
     return new POPF(opcode);
 }
 
-inline Instruction *checkConflict(string opcode)
+inline Instruction *checkConflictBit7(string opcode)
 {
     Conflict *inst = new Conflict(opcode);
     inst->size = 4;
@@ -274,6 +282,147 @@ inline Instruction *createSTOS(string opcode)
 inline Instruction *createCALL(string opcode)
 {
     return new CALL(opcode);
+}
+
+inline Instruction *checkConflictAll1(string opcode)
+{
+    Conflict *inst = new Conflict(opcode);
+    inst->size = 2;
+    inst->setType(ConflictTypesEnum::ALL_1);
+    return inst;
+}
+
+inline Instruction *checkConflictTestMulOthers(string opcode)
+{
+    Conflict *inst = new Conflict(opcode);
+    inst->size = 2;
+    inst->setType(ConflictTypesEnum::TEST_MUL_OTHERS);
+    return inst;
+}
+
+inline Instruction *createJMP(string opcode)
+{
+    return new JMP(opcode);
+}
+
+inline Instruction *createRET(string opcode)
+{
+    return new RET(opcode);
+}
+
+inline Instruction *createJE(string opcode)
+{
+    return new JE(opcode);
+}
+
+inline Instruction *createJL(string opcode)
+{
+    return new JL(opcode);
+}
+
+inline Instruction *createJLE(string opcode)
+{
+    return new JLE(opcode);
+}
+
+inline Instruction *createJB(string opcode)
+{
+    return new JB(opcode);
+}
+
+inline Instruction *createJBE(string opcode)
+{
+    return new JBE(opcode);
+}
+
+inline Instruction *createJP(string opcode)
+{
+    return new JP(opcode);
+}
+
+inline Instruction *createJO(string opcode)
+{
+    return new JO(opcode);
+}
+
+inline Instruction *createJS(string opcode)
+{
+    return new JS(opcode);
+}
+
+inline Instruction *createJNE(string opcode)
+{
+    return new JNE(opcode);
+}
+
+inline Instruction *createJNL(string opcode)
+{
+    return new JNL(opcode);
+}
+
+inline Instruction *createJNLE(string opcode)
+{
+    return new JNLE(opcode);
+}
+
+inline Instruction *createJNB(string opcode)
+{
+    return new JNB(opcode);
+}
+
+inline Instruction *createJNBE(string opcode)
+{
+    return new JNBE(opcode);
+}
+
+inline Instruction *createJNP(string opcode)
+{
+    return new JNP(opcode);
+}
+
+inline Instruction *createJNO(string opcode)
+{
+    return new JNO(opcode);
+}
+
+inline Instruction *createJNS(string opcode)
+{
+    return new JNS(opcode);
+}
+
+inline Instruction *createLOOP(string opcode)
+{
+    return new LOOP(opcode);
+}
+
+inline Instruction *createLOOPZ(string opcode)
+{
+    return new LOOPZ(opcode);
+}
+
+inline Instruction *createLOOPNZ(string opcode)
+{
+    return new LOOPNZ(opcode);
+}
+
+inline Instruction *createJCXZ(string opcode)
+{
+    return new JCXZ(opcode);
+}
+
+inline Instruction *createINT(string opcode)
+{
+    return new INT(opcode);
+}
+
+inline Instruction *createINTO(string opcode)
+{
+    return new INTO(opcode);
+}
+
+inline Instruction *createIRET(string opcode)
+{
+    return new IRET(opcode);
 }
 
 extern map<string, Instruction *(*)(string)> instructionMap;

@@ -101,7 +101,9 @@ public:
 enum class ConflictTypesEnum
 {
     BIT7_1,
-    SHIFT
+    SHIFT,
+    ALL_1,
+    TEST_MUL_OTHERS
 };
 class Conflict : public Instruction
 {
@@ -609,6 +611,17 @@ public:
     }
 };
 
+class IMUL : public Instruction
+{
+public:
+    IMUL(string opcode)
+    {
+
+        this->getBasicInfo("IMUL", opcode);
+        this->size = 2;
+    }
+};
+
 class AAM : public Instruction
 {
 public:
@@ -627,6 +640,16 @@ public:
     {
 
         this->getBasicInfo("DIV", opcode);
+        this->size = 2;
+    }
+};
+class IDIV : public Instruction
+{
+public:
+    IDIV(string opcode)
+    {
+
+        this->getBasicInfo("IDIV", opcode);
         this->size = 2;
     }
 };
@@ -956,6 +979,277 @@ public:
         this->getBasicInfo("CALL", opcode);
         this->size = 2;
         this->w = opcode[7];
+    }
+};
+
+class JMP : public Instruction
+{
+public:
+    JMP(string opcode)
+    {
+        this->getBasicInfo("JMP", opcode);
+        if (opcode == "11101001" || opcode == " 11101010" || opcode == "11111111")
+        {
+            this->size = 3;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+};
+
+class RET : public Instruction
+{
+public:
+    RET(string opcode)
+    {
+        this->getBasicInfo("RET", opcode);
+        if (opcode == "11000011" || opcode == "11001011")
+        {
+            this->size = 1;
+        }
+        else
+        {
+            this->size = 3;
+        }
+    }
+};
+
+class JE : public Instruction
+{
+public:
+    JE(string opcode)
+    {
+        this->getBasicInfo("JE", opcode);
+        this->size = 2;
+    }
+};
+
+class JL : public Instruction
+{
+public:
+    JL(string opcode)
+    {
+        this->getBasicInfo("JL", opcode);
+        this->size = 2;
+    }
+};
+
+class JLE : public Instruction
+{
+public:
+    JLE(string opcode)
+    {
+        this->getBasicInfo("JLE", opcode);
+        this->size = 2;
+    }
+};
+
+class JB : public Instruction
+{
+public:
+    JB(string opcode)
+    {
+        this->getBasicInfo("JB", opcode);
+        this->size = 2;
+    }
+};
+
+class JBE : public Instruction
+{
+public:
+    JBE(string opcode)
+    {
+        this->getBasicInfo("JBE", opcode);
+        this->size = 2;
+    }
+};
+
+class JP : public Instruction
+{
+public:
+    JP(string opcode)
+    {
+        this->getBasicInfo("JP", opcode);
+        this->size = 2;
+    }
+};
+
+class JO : public Instruction
+{
+public:
+    JO(string opcode)
+    {
+        this->getBasicInfo("JO", opcode);
+        this->size = 2;
+    }
+};
+
+class JS : public Instruction
+{
+public:
+    JS(string opcode)
+    {
+        this->getBasicInfo("JS", opcode);
+        this->size = 2;
+    }
+};
+
+class JNE : public Instruction
+{
+public:
+    JNE(string opcode)
+    {
+        this->getBasicInfo("JNE", opcode);
+        this->size = 2;
+    }
+};
+
+class JNL : public Instruction
+{
+public:
+    JNL(string opcode)
+    {
+        this->getBasicInfo("JNL", opcode);
+        this->size = 2;
+    }
+};
+
+class JNLE : public Instruction
+{
+public:
+    JNLE(string opcode)
+    {
+        this->getBasicInfo("JNLE", opcode);
+        this->size = 2;
+    }
+};
+
+class JNB : public Instruction
+{
+public:
+    JNB(string opcode)
+    {
+        this->getBasicInfo("JNB", opcode);
+        this->size = 2;
+    }
+};
+
+class JNBE : public Instruction
+{
+public:
+    JNBE(string opcode)
+    {
+        this->getBasicInfo("JNBE", opcode);
+        this->size = 2;
+    }
+};
+
+class JNP : public Instruction
+{
+public:
+    JNP(string opcode)
+    {
+        this->getBasicInfo("JNP", opcode);
+        this->size = 2;
+    }
+};
+
+class JNO : public Instruction
+{
+public:
+    JNO(string opcode)
+    {
+        this->getBasicInfo("JNO", opcode);
+        this->size = 2;
+    }
+};
+
+class JNS : public Instruction
+{
+public:
+    JNS(string opcode)
+    {
+        this->getBasicInfo("JNS", opcode);
+        this->size = 2;
+    }
+};
+
+class LOOP : public Instruction
+{
+public:
+    LOOP(string opcode)
+    {
+        this->getBasicInfo("LOOP", opcode);
+        this->size = 2;
+    }
+};
+
+class LOOPZ : public Instruction
+{
+public:
+    LOOPZ(string opcode)
+    {
+        this->getBasicInfo("LOOPZ", opcode);
+        this->size = 2;
+    }
+};
+
+class LOOPNZ : public Instruction
+{
+public:
+    LOOPNZ(string opcode)
+    {
+        this->getBasicInfo("LOOPNZ", opcode);
+        this->size = 2;
+    }
+};
+
+class JCXZ : public Instruction
+{
+public:
+    JCXZ(string opcode)
+    {
+        this->getBasicInfo("JCXZ", opcode);
+        this->size = 2;
+    }
+};
+
+class INT : public Instruction
+{
+public:
+    INT(string opcode)
+    {
+        this->getBasicInfo("INT", opcode);
+        if (opcode == "11001101")
+        {
+            this->size = 2;
+        }
+        else
+        {
+            this->size = 1;
+        }
+    }
+};
+
+class INTO : public Instruction
+{
+public:
+    INTO(string opcode)
+    {
+        this->getBasicInfo("INTO", opcode);
+        this->size = 1;
+    }
+};
+
+class IRET : public Instruction
+{
+public:
+    IRET(string opcode)
+    {
+        this->getBasicInfo("IRET", opcode);
+        this->size = 1;
     }
 };
 

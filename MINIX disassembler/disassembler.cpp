@@ -176,6 +176,70 @@ vector<int> fileReader(string name)
 
                                 inst->setPayload(payload);
                             }
+                            else if (conflict->type == ConflictTypesEnum::ALL_1)
+                            {
+                                string p1 = payload[0];
+
+                                free(inst);
+                                if (p1.substr(2, 3) == "110")
+                                {
+                                    inst = createPUSH(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "010")
+                                {
+                                    inst = createCALL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "011")
+                                {
+                                    inst = createCALL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "100")
+                                {
+                                    inst = createJMP(opcode);
+                                }
+                                else // 101
+                                {
+                                    inst = createJMP(opcode);
+                                }
+
+                                inst->setPayload(payload);
+                            }
+                            else if (conflict->type == ConflictTypesEnum::ALL_1)
+                            {
+
+                                string p1 = payload[0];
+
+                                if (p1.substr(2, 3) == "110")
+                                {
+                                    inst = createNEG(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "110")
+                                {
+                                    inst = createMUL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "101")
+                                {
+                                    inst = createIMUL(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "110")
+                                {
+                                    inst = createDIV(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "111")
+                                {
+                                    inst = createIDIV(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "010")
+                                {
+                                    inst = createNOT(opcode);
+                                }
+                                else if (p1.substr(2, 3) == "000")
+                                {
+                                    inst = createTEST(opcode);
+                                }
+
+                                inst->setPayload(payload);
+                            }
                         }
 
                         opcode = "";
@@ -188,30 +252,6 @@ vector<int> fileReader(string name)
                         cout << out << inst->name;
                     }
                 }
-
-                // cout << bitset<8>(c) << endl;
-                // if (s2 != "")
-                //{
-                //   s1 = "";
-                //   s2 = "";
-                //}
-
-                // if (s1 == "")
-                //{
-                //    s1 = bitset<8>(c).to_string();
-                //}
-                // else
-                //{
-                //  s2 = bitset<8>(c).to_string();
-                //  i++;
-                // if (i > 15)
-                // {
-                //    cout << s1 << " " << s2 << " / ";
-                //   stringstream ss;
-                //   ss << hex << stoll(s1 + s2, NULL, 2);
-                //   cout << ss.str() << endl;
-                ////}
-                //}
             }
         }
         file.close();
