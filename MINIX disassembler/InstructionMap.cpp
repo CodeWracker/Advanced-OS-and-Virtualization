@@ -1,6 +1,6 @@
 #include "InstructionMap.hpp"
 
-map<string, Instruction *(*)(string)> instructionMap = {
+map<string, Instruction *(*)(string, string)> instructionMap = {
     {"100010", &createMOV},
     {"1100011", &createMOV},
     {"1011", &createMOV},
@@ -9,7 +9,7 @@ map<string, Instruction *(*)(string)> instructionMap = {
     {"10001110", &createMOV},
     {"10001100", &createMOV},
     {"11111111", &checkConflictAll1},
-    {"01011", &createPUSH},
+    {"01010", &createPUSH},
     {"000", &createPUSH},
     {"000000", &createADD},
     {"100000", &checkConflictBit7},

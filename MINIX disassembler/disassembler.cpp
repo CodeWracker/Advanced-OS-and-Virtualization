@@ -12,7 +12,7 @@ using namespace std;
 // a map of string to fucntions tact return Instruction*
 // this will be available in the main file
 
-map<string, Instruction *(*)(string)> shiftConflictMap = {
+map<string, Instruction *(*)(string, string)> shiftConflictMap = {
     {"100", &createSHL},
     {"101", &createSHR},
     {"111", &createSAR},
@@ -22,7 +22,7 @@ map<string, Instruction *(*)(string)> shiftConflictMap = {
     {"011", &createRCR},
 };
 
-map<string, Instruction *(*)(string)> bit7_1ConflictMap = {
+map<string, Instruction *(*)(string, string)> bit7_1ConflictMap = {
     {"000", &createADD},
     {"010", &createADC},
     {"101", &createSUB},
@@ -33,15 +33,15 @@ map<string, Instruction *(*)(string)> bit7_1ConflictMap = {
     {"110", &createXOR},
 };
 
-map<string, Instruction *(*)(string)> all1ConflictMap = {
-    {"000", &createPUSH},
+map<string, Instruction *(*)(string, string)> all1ConflictMap = {
+    {"110", &createPUSH},
     {"010", &createCALL},
     {"011", &createCALL},
     {"100", &createJMP},
     {"101", &createJMP},
 };
 
-map<string, Instruction *(*)(string)> testMulConflictMap = {
+map<string, Instruction *(*)(string, string)> testMulConflictMap = {
     {"011", &createNEG},
     {"100", &createMUL},
     {"101", &createIMUL},
@@ -64,7 +64,7 @@ Instruction *checkConflict(Instruction *inst, string buffer)
             // search in map
             if (shiftConflictMap.find(p1.substr(2, 3)) != shiftConflictMap.end())
             {
-                inst = shiftConflictMap[p1.substr(2, 3)](opcode);
+                inst = shiftConflictMap[p1.substr(2, 3)](opcode, buffer);
             }
         }
         else if (conflict->type == ConflictTypesEnum::BIT7_1)
@@ -74,18 +74,22 @@ Instruction *checkConflict(Instruction *inst, string buffer)
             // search in map
             if (bit7_1ConflictMap.find(p1.substr(2, 3)) != bit7_1ConflictMap.end())
             {
-                inst = bit7_1ConflictMap[p1.substr(2, 3)](opcode);
+                inst = bit7_1ConflictMap[p1.substr(2, 3)](opcode, buffer);
             }
         }
         else if (conflict->type == ConflictTypesEnum::ALL_1)
         {
             string p1 = buffer;
-
+            cout << "error all 1" << endl;
             free(inst);
             // search in map
             if (all1ConflictMap.find(p1.substr(2, 3)) != all1ConflictMap.end())
             {
-                inst = all1ConflictMap[p1.substr(2, 3)](opcode);
+                inst = all1ConflictMap[p1.substr(2, 3)](opcode, buffer);
+            }
+            else
+            {
+                cout << "error all 1 not find" << endl;
             }
         }
         else if (conflict->type == ConflictTypesEnum::TEST_MUL_OTHERS)
@@ -94,13 +98,24 @@ Instruction *checkConflict(Instruction *inst, string buffer)
             // search in map
             if (testMulConflictMap.find(p1.substr(2, 3)) != testMulConflictMap.end())
             {
-                inst = testMulConflictMap[p1.substr(2, 3)](opcode);
+                inst = testMulConflictMap[p1.substr(2, 3)](opcode, buffer);
             }
         }
     }
     return inst;
 }
+void printInst(Instruction *inst)
+{
 
+    string out = inst->getHexAddr() + ": " + inst->getHex();
+
+    // make the out have 20 chars (complete with " ")
+    while (out.size() < 20)
+    {
+        out += " ";
+    }
+    cout << out << inst->name << endl;
+}
 vector<int> fileReader(string name)
 {
     string line;
@@ -138,6 +153,7 @@ vector<int> fileReader(string name)
 
     Instruction *inst;
     int payloadSize;
+    cout << endl;
     while (address < lines.size() - 1)
     {
         if (opcode == "")
@@ -146,7 +162,6 @@ vector<int> fileReader(string name)
             opcode = lines.at(address);
             buffer = lines.at(address + 1);
 
-            cout << endl;
             // cout << "opcode: " << hex << stoll(opcode, NULL, 2)
             //      << " | buffer: " << hex << stoll(buffer, NULL, 2) << endl;
 
@@ -168,13 +183,14 @@ vector<int> fileReader(string name)
             // cout << "terminei de procurar com o opcode: " << subOpcode << endl;
             if (opcodeCount != 0)
             {
-                inst = instructionMap.find(subOpcode)->second(opcode);
+                inst = instructionMap.find(subOpcode)->second(opcode, buffer);
                 inst = checkConflict(inst, buffer);
                 inst->setAddress(address);
                 payloadSize = inst->size - 1;
                 if (payloadSize == 0)
                 {
                     opcode = "";
+                    printInst(inst);
                     address++;
                     continue;
                 }
@@ -188,7 +204,6 @@ vector<int> fileReader(string name)
         }
         else
         {
-
             string cmdBinary = lines.at(address);
             payload.push_back(cmdBinary);
             payloadSize--;
@@ -196,15 +211,8 @@ vector<int> fileReader(string name)
             {
 
                 inst->setPayload(payload);
-
+                printInst(inst);
                 opcode = "";
-                string out = inst->getHexAddr() + ": " + inst->getHex();
-                // make the out have 20 chars (complete with " ")
-                while (out.size() < 20)
-                {
-                    out += " ";
-                }
-                cout << out << inst->name;
             }
         }
         address++;

@@ -8,480 +8,480 @@ using namespace std;
 
 // a map of strings to objects of Instruction type
 // this will be available in the main file
-inline Instruction *createMOV(string opcode)
+inline Instruction *createMOV(string opcode, string buffer)
 {
-    return new MOV(opcode);
+    return new MOV(opcode, buffer);
 }
-inline Instruction *createPUSH(string opcode)
+inline Instruction *createPUSH(string opcode, string buffer)
 {
-    return new PUSH(opcode);
+    return new PUSH(opcode, buffer);
 }
-inline Instruction *createADD(string opcode)
+inline Instruction *createADD(string opcode, string buffer)
 {
-    return new ADD(opcode);
+    return new ADD(opcode, buffer);
 }
-inline Instruction *createADC(string opcode)
+inline Instruction *createADC(string opcode, string buffer)
 {
-    return new ADC(opcode);
-}
-
-inline Instruction *createINC(string opcode)
-{
-    return new INC(opcode);
+    return new ADC(opcode, buffer);
 }
 
-inline Instruction *createAAA(string opcode)
+inline Instruction *createINC(string opcode, string buffer)
 {
-    return new AAA(opcode);
+    return new INC(opcode, buffer);
 }
 
-inline Instruction *createBAA(string opcode)
+inline Instruction *createAAA(string opcode, string buffer)
 {
-    return new BAA(opcode);
+    return new AAA(opcode, buffer);
 }
 
-inline Instruction *createSUB(string opcode)
+inline Instruction *createBAA(string opcode, string buffer)
 {
-    return new SUB(opcode);
+    return new BAA(opcode, buffer);
 }
 
-inline Instruction *createSSB(string opcode)
+inline Instruction *createSUB(string opcode, string buffer)
 {
-    return new SSB(opcode);
+    return new SUB(opcode, buffer);
 }
 
-inline Instruction *createDEC(string opcode)
+inline Instruction *createSSB(string opcode, string buffer)
 {
-    return new DEC(opcode);
+    return new SSB(opcode, buffer);
 }
 
-inline Instruction *createNEG(string opcode)
+inline Instruction *createDEC(string opcode, string buffer)
 {
-    return new NEG(opcode);
+    return new DEC(opcode, buffer);
 }
 
-inline Instruction *createCMP(string opcode)
+inline Instruction *createNEG(string opcode, string buffer)
 {
-    return new CMP(opcode);
+    return new NEG(opcode, buffer);
 }
 
-inline Instruction *createAAS(string opcode)
+inline Instruction *createCMP(string opcode, string buffer)
 {
-    return new AAS(opcode);
+    return new CMP(opcode, buffer);
 }
 
-inline Instruction *createDAS(string opcode)
+inline Instruction *createAAS(string opcode, string buffer)
 {
-    return new DAS(opcode);
+    return new AAS(opcode, buffer);
 }
 
-inline Instruction *createMUL(string opcode)
+inline Instruction *createDAS(string opcode, string buffer)
 {
-    return new MUL(opcode);
-}
-inline Instruction *createIMUL(string opcode)
-{
-    return new IMUL(opcode);
+    return new DAS(opcode, buffer);
 }
 
-inline Instruction *createAAM(string opcode)
+inline Instruction *createMUL(string opcode, string buffer)
 {
-    return new AAM(opcode);
+    return new MUL(opcode, buffer);
+}
+inline Instruction *createIMUL(string opcode, string buffer)
+{
+    return new IMUL(opcode, buffer);
 }
 
-inline Instruction *createDIV(string opcode)
+inline Instruction *createAAM(string opcode, string buffer)
 {
-    return new DIV(opcode);
-}
-inline Instruction *createIDIV(string opcode)
-{
-    return new IDIV(opcode);
+    return new AAM(opcode, buffer);
 }
 
-inline Instruction *createAAD(string opcode)
+inline Instruction *createDIV(string opcode, string buffer)
 {
-    return new AAD(opcode);
+    return new DIV(opcode, buffer);
+}
+inline Instruction *createIDIV(string opcode, string buffer)
+{
+    return new IDIV(opcode, buffer);
 }
 
-inline Instruction *createCBW(string opcode)
+inline Instruction *createAAD(string opcode, string buffer)
 {
-    return new CBW(opcode);
+    return new AAD(opcode, buffer);
 }
 
-inline Instruction *createCWD(string opcode)
+inline Instruction *createCBW(string opcode, string buffer)
 {
-    return new CWD(opcode);
+    return new CBW(opcode, buffer);
 }
 
-inline Instruction *createPOP(string opcode)
+inline Instruction *createCWD(string opcode, string buffer)
 {
-    return new POP(opcode);
+    return new CWD(opcode, buffer);
 }
 
-inline Instruction *createXCHG(string opcode)
+inline Instruction *createPOP(string opcode, string buffer)
 {
-    return new XCHG(opcode);
+    return new POP(opcode, buffer);
 }
 
-inline Instruction *createIN(string opcode)
+inline Instruction *createXCHG(string opcode, string buffer)
 {
-    return new IN(opcode);
+    return new XCHG(opcode, buffer);
 }
 
-inline Instruction *createOUT(string opcode)
+inline Instruction *createIN(string opcode, string buffer)
 {
-    return new OUT(opcode);
+    return new IN(opcode, buffer);
 }
 
-inline Instruction *createXLAT(string opcode)
+inline Instruction *createOUT(string opcode, string buffer)
 {
-    return new XLAT(opcode);
+    return new OUT(opcode, buffer);
 }
 
-inline Instruction *createLEA(string opcode)
+inline Instruction *createXLAT(string opcode, string buffer)
 {
-    return new LEA(opcode);
+    return new XLAT(opcode, buffer);
 }
 
-inline Instruction *createLDS(string opcode)
+inline Instruction *createLEA(string opcode, string buffer)
 {
-    return new LDS(opcode);
+    return new LEA(opcode, buffer);
 }
 
-inline Instruction *createLES(string opcode)
+inline Instruction *createLDS(string opcode, string buffer)
 {
-    return new LES(opcode);
+    return new LDS(opcode, buffer);
 }
 
-inline Instruction *createLAHF(string opcode)
+inline Instruction *createLES(string opcode, string buffer)
 {
-    return new LAHF(opcode);
+    return new LES(opcode, buffer);
 }
 
-inline Instruction *createSAHF(string opcode)
+inline Instruction *createLAHF(string opcode, string buffer)
 {
-    return new SAHF(opcode);
+    return new LAHF(opcode, buffer);
 }
 
-inline Instruction *createPUSHF(string opcode)
+inline Instruction *createSAHF(string opcode, string buffer)
 {
-    return new PUSHF(opcode);
+    return new SAHF(opcode, buffer);
 }
 
-inline Instruction *createPOPF(string opcode)
+inline Instruction *createPUSHF(string opcode, string buffer)
 {
-    return new POPF(opcode);
+    return new PUSHF(opcode, buffer);
 }
 
-inline Instruction *checkConflictBit7(string opcode)
+inline Instruction *createPOPF(string opcode, string buffer)
 {
-    Conflict *inst = new Conflict(opcode);
+    return new POPF(opcode, buffer);
+}
+
+inline Instruction *checkConflictBit7(string opcode, string buffer)
+{
+    Conflict *inst = new Conflict(opcode, buffer);
     inst->size = 4;
     inst->setType(ConflictTypesEnum::BIT7_1);
     return inst;
 }
 
-inline Instruction *createNOT(string opcode)
+inline Instruction *createNOT(string opcode, string buffer)
 {
-    return new NOT(opcode);
+    return new NOT(opcode, buffer);
 }
 
-inline Instruction *createShift(string opcode)
+inline Instruction *createShift(string opcode, string buffer)
 {
-    Conflict *inst = new Conflict(opcode);
+    Conflict *inst = new Conflict(opcode, buffer);
     inst->size = 4;
     inst->setType(ConflictTypesEnum::SHIFT);
     return inst;
 }
 
-inline Instruction *createSHL(string opcode)
+inline Instruction *createSHL(string opcode, string buffer)
 {
-    return new SHL(opcode);
+    return new SHL(opcode, buffer);
 }
 
-inline Instruction *createSHR(string opcode)
+inline Instruction *createSHR(string opcode, string buffer)
 {
-    return new SHR(opcode);
+    return new SHR(opcode, buffer);
 }
 
-inline Instruction *createSAR(string opcode)
+inline Instruction *createSAR(string opcode, string buffer)
 {
-    return new SAR(opcode);
+    return new SAR(opcode, buffer);
 }
 
-inline Instruction *createROL(string opcode)
+inline Instruction *createROL(string opcode, string buffer)
 {
-    return new ROL(opcode);
+    return new ROL(opcode, buffer);
 }
 
-inline Instruction *createROR(string opcode)
+inline Instruction *createROR(string opcode, string buffer)
 {
-    return new ROR(opcode);
+    return new ROR(opcode, buffer);
 }
 
-inline Instruction *createRCL(string opcode)
+inline Instruction *createRCL(string opcode, string buffer)
 {
-    return new RCL(opcode);
+    return new RCL(opcode, buffer);
 }
 
-inline Instruction *createRCR(string opcode)
+inline Instruction *createRCR(string opcode, string buffer)
 {
-    return new RCR(opcode);
+    return new RCR(opcode, buffer);
 }
 
-inline Instruction *createAND(string opcode)
+inline Instruction *createAND(string opcode, string buffer)
 {
-    return new AND(opcode);
+    return new AND(opcode, buffer);
 }
 
-inline Instruction *createTEST(string opcode)
+inline Instruction *createTEST(string opcode, string buffer)
 {
-    return new TEST(opcode);
+    return new TEST(opcode, buffer);
 }
 
-inline Instruction *createOR(string opcode)
+inline Instruction *createOR(string opcode, string buffer)
 {
-    return new OR(opcode);
+    return new OR(opcode, buffer);
 }
 
-inline Instruction *createXOR(string opcode)
+inline Instruction *createXOR(string opcode, string buffer)
 {
-    return new XOR(opcode);
+    return new XOR(opcode, buffer);
 }
 
-inline Instruction *createREP(string opcode)
+inline Instruction *createREP(string opcode, string buffer)
 {
-    return new REP(opcode);
+    return new REP(opcode, buffer);
 }
 
-inline Instruction *createMOVS(string opcode)
+inline Instruction *createMOVS(string opcode, string buffer)
 {
-    return new MOVS(opcode);
+    return new MOVS(opcode, buffer);
 }
 
-inline Instruction *createCMPS(string opcode)
+inline Instruction *createCMPS(string opcode, string buffer)
 {
-    return new CMPS(opcode);
+    return new CMPS(opcode, buffer);
 }
 
-inline Instruction *createSCAS(string opcode)
+inline Instruction *createSCAS(string opcode, string buffer)
 {
-    return new SCAS(opcode);
+    return new SCAS(opcode, buffer);
 }
 
-inline Instruction *createLODS(string opcode)
+inline Instruction *createLODS(string opcode, string buffer)
 {
-    return new LODS(opcode);
+    return new LODS(opcode, buffer);
 }
 
-inline Instruction *createSTOS(string opcode)
+inline Instruction *createSTOS(string opcode, string buffer)
 {
-    return new STOS(opcode);
+    return new STOS(opcode, buffer);
 }
 
-inline Instruction *createCALL(string opcode)
+inline Instruction *createCALL(string opcode, string buffer)
 {
-    return new CALL(opcode);
+    return new CALL(opcode, buffer);
 }
 
-inline Instruction *checkConflictAll1(string opcode)
+inline Instruction *checkConflictAll1(string opcode, string buffer)
 {
-    Conflict *inst = new Conflict(opcode);
+    Conflict *inst = new Conflict(opcode, buffer);
     inst->size = 2;
     inst->setType(ConflictTypesEnum::ALL_1);
     return inst;
 }
 
-inline Instruction *checkConflictTestMulOthers(string opcode)
+inline Instruction *checkConflictTestMulOthers(string opcode, string buffer)
 {
-    Conflict *inst = new Conflict(opcode);
+    Conflict *inst = new Conflict(opcode, buffer);
     inst->size = 2;
     inst->setType(ConflictTypesEnum::TEST_MUL_OTHERS);
     inst->name = "CONFLICT_TEST_MUL_OTHERS";
     return inst;
 }
 
-inline Instruction *createJMP(string opcode)
+inline Instruction *createJMP(string opcode, string buffer)
 {
-    return new JMP(opcode);
+    return new JMP(opcode, buffer);
 }
 
-inline Instruction *createRET(string opcode)
+inline Instruction *createRET(string opcode, string buffer)
 {
-    return new RET(opcode);
+    return new RET(opcode, buffer);
 }
 
-inline Instruction *createJE(string opcode)
+inline Instruction *createJE(string opcode, string buffer)
 {
-    return new JE(opcode);
+    return new JE(opcode, buffer);
 }
 
-inline Instruction *createJL(string opcode)
+inline Instruction *createJL(string opcode, string buffer)
 {
-    return new JL(opcode);
+    return new JL(opcode, buffer);
 }
 
-inline Instruction *createJLE(string opcode)
+inline Instruction *createJLE(string opcode, string buffer)
 {
-    return new JLE(opcode);
+    return new JLE(opcode, buffer);
 }
 
-inline Instruction *createJB(string opcode)
+inline Instruction *createJB(string opcode, string buffer)
 {
-    return new JB(opcode);
+    return new JB(opcode, buffer);
 }
 
-inline Instruction *createJBE(string opcode)
+inline Instruction *createJBE(string opcode, string buffer)
 {
-    return new JBE(opcode);
+    return new JBE(opcode, buffer);
 }
 
-inline Instruction *createJP(string opcode)
+inline Instruction *createJP(string opcode, string buffer)
 {
-    return new JP(opcode);
+    return new JP(opcode, buffer);
 }
 
-inline Instruction *createJO(string opcode)
+inline Instruction *createJO(string opcode, string buffer)
 {
-    return new JO(opcode);
+    return new JO(opcode, buffer);
 }
 
-inline Instruction *createJS(string opcode)
+inline Instruction *createJS(string opcode, string buffer)
 {
-    return new JS(opcode);
+    return new JS(opcode, buffer);
 }
 
-inline Instruction *createJNE(string opcode)
+inline Instruction *createJNE(string opcode, string buffer)
 {
-    return new JNE(opcode);
+    return new JNE(opcode, buffer);
 }
 
-inline Instruction *createJNL(string opcode)
+inline Instruction *createJNL(string opcode, string buffer)
 {
-    return new JNL(opcode);
+    return new JNL(opcode, buffer);
 }
 
-inline Instruction *createJNLE(string opcode)
+inline Instruction *createJNLE(string opcode, string buffer)
 {
-    return new JNLE(opcode);
+    return new JNLE(opcode, buffer);
 }
 
-inline Instruction *createJNB(string opcode)
+inline Instruction *createJNB(string opcode, string buffer)
 {
-    return new JNB(opcode);
+    return new JNB(opcode, buffer);
 }
 
-inline Instruction *createJNBE(string opcode)
+inline Instruction *createJNBE(string opcode, string buffer)
 {
-    return new JNBE(opcode);
+    return new JNBE(opcode, buffer);
 }
 
-inline Instruction *createJNP(string opcode)
+inline Instruction *createJNP(string opcode, string buffer)
 {
-    return new JNP(opcode);
+    return new JNP(opcode, buffer);
 }
 
-inline Instruction *createJNO(string opcode)
+inline Instruction *createJNO(string opcode, string buffer)
 {
-    return new JNO(opcode);
+    return new JNO(opcode, buffer);
 }
 
-inline Instruction *createJNS(string opcode)
+inline Instruction *createJNS(string opcode, string buffer)
 {
-    return new JNS(opcode);
+    return new JNS(opcode, buffer);
 }
 
-inline Instruction *createLOOP(string opcode)
+inline Instruction *createLOOP(string opcode, string buffer)
 {
-    return new LOOP(opcode);
+    return new LOOP(opcode, buffer);
 }
 
-inline Instruction *createLOOPZ(string opcode)
+inline Instruction *createLOOPZ(string opcode, string buffer)
 {
-    return new LOOPZ(opcode);
+    return new LOOPZ(opcode, buffer);
 }
 
-inline Instruction *createLOOPNZ(string opcode)
+inline Instruction *createLOOPNZ(string opcode, string buffer)
 {
-    return new LOOPNZ(opcode);
+    return new LOOPNZ(opcode, buffer);
 }
 
-inline Instruction *createJCXZ(string opcode)
+inline Instruction *createJCXZ(string opcode, string buffer)
 {
-    return new JCXZ(opcode);
+    return new JCXZ(opcode, buffer);
 }
 
-inline Instruction *createINT(string opcode)
+inline Instruction *createINT(string opcode, string buffer)
 {
-    return new INT(opcode);
+    return new INT(opcode, buffer);
 }
 
-inline Instruction *createINTO(string opcode)
+inline Instruction *createINTO(string opcode, string buffer)
 {
-    return new INTO(opcode);
+    return new INTO(opcode, buffer);
 }
 
-inline Instruction *createIRET(string opcode)
+inline Instruction *createIRET(string opcode, string buffer)
 {
-    return new IRET(opcode);
+    return new IRET(opcode, buffer);
 }
 
-inline Instruction *createCLC(string opcode)
+inline Instruction *createCLC(string opcode, string buffer)
 {
-    return new CLC(opcode);
+    return new CLC(opcode, buffer);
 }
 
-inline Instruction *createCMC(string opcode)
+inline Instruction *createCMC(string opcode, string buffer)
 {
-    return new CMC(opcode);
+    return new CMC(opcode, buffer);
 }
 
-inline Instruction *createSTC(string opcode)
+inline Instruction *createSTC(string opcode, string buffer)
 {
-    return new STC(opcode);
+    return new STC(opcode, buffer);
 }
 
-inline Instruction *createCLD(string opcode)
+inline Instruction *createCLD(string opcode, string buffer)
 {
-    return new CLD(opcode);
+    return new CLD(opcode, buffer);
 }
 
-inline Instruction *createSTD(string opcode)
+inline Instruction *createSTD(string opcode, string buffer)
 {
-    return new STD(opcode);
+    return new STD(opcode, buffer);
 }
 
-inline Instruction *createCLI(string opcode)
+inline Instruction *createCLI(string opcode, string buffer)
 {
-    return new CLI(opcode);
+    return new CLI(opcode, buffer);
 }
 
-inline Instruction *createSTI(string opcode)
+inline Instruction *createSTI(string opcode, string buffer)
 {
-    return new STI(opcode);
+    return new STI(opcode, buffer);
 }
 
-inline Instruction *createHLT(string opcode)
+inline Instruction *createHLT(string opcode, string buffer)
 {
-    return new HLT(opcode);
+    return new HLT(opcode, buffer);
 }
 
-inline Instruction *createWAIT(string opcode)
+inline Instruction *createWAIT(string opcode, string buffer)
 {
-    return new WAIT(opcode);
+    return new WAIT(opcode, buffer);
 }
 
-inline Instruction *createESC(string opcode)
+inline Instruction *createESC(string opcode, string buffer)
 {
-    return new ESC(opcode);
+    return new ESC(opcode, buffer);
 }
 
-inline Instruction *createLOCK(string opcode)
+inline Instruction *createLOCK(string opcode, string buffer)
 {
-    return new LOCK(opcode);
+    return new LOCK(opcode, buffer);
 }
 
-extern map<string, Instruction *(*)(string)> instructionMap;
+extern map<string, Instruction *(*)(string, string)> instructionMap;
 
 // createMOV
 

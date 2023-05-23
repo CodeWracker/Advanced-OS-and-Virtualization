@@ -81,6 +81,7 @@ public:
         {
             stringstream s1;
             s1 << hex << stoll(str, NULL, 2);
+
             // verify if s1 has 2 chars
             if (s1.str().size() == 1)
             {
@@ -110,7 +111,7 @@ class Conflict : public Instruction
 {
 public:
     ConflictTypesEnum type;
-    Conflict(string opcode)
+    Conflict(string opcode, string buffer)
     {
         this->opcode = opcode;
         this->name = "CONFLICT";
@@ -127,7 +128,7 @@ class MOV : public Instruction
 {
 
 public:
-    MOV(string opcode)
+    MOV(string opcode, string buffer)
     {
 
         this->getBasicInfo("MOV", opcode);
@@ -155,10 +156,16 @@ public:
             this->d = opcode[6];
             this->w = opcode[7];
             this->size = 2;
-            if (w == '1')
+            this->mod = buffer.substr(0, 2);
+            this->reg = buffer.substr(2, 3);
+            this->rm = buffer.substr(5, 3);
+            if (this->w == '1' && this->mod == "00" && this->rm == "110")
             {
-                // word instruction
-                size = 4;
+                this->size = 4;
+            }
+            if (this->mod == "10")
+            {
+                this->size = 4;
             }
         }
         else // immediate to register memmory
@@ -173,15 +180,14 @@ public:
 class PUSH : public Instruction
 {
 public:
-    PUSH(string opcode)
+    PUSH(string opcode, string buffer)
     {
-
         this->getBasicInfo("PUSH", opcode);
         if (opcode == "11111111")
         {
-            this->size = 2;
+            this->size = 3;
         }
-        else if (opcode.substr(0, 5) == "01011")
+        else if (opcode.substr(0, 5) == "01010")
         {
             this->reg = opcode.substr(5, 3);
             this->size = 1;
@@ -198,7 +204,7 @@ public:
 class POP : public Instruction
 {
 public:
-    POP(string opcode)
+    POP(string opcode, string buffer)
     {
 
         this->getBasicInfo("POP", opcode);
@@ -224,7 +230,7 @@ public:
 class XCHG : public Instruction
 {
 public:
-    XCHG(string opcode)
+    XCHG(string opcode, string buffer)
     {
 
         this->getBasicInfo("XCHG", opcode);
@@ -245,7 +251,7 @@ public:
 class IN : public Instruction
 {
 public:
-    IN(string opcode)
+    IN(string opcode, string buffer)
     {
 
         this->getBasicInfo("IN", opcode);
@@ -255,7 +261,7 @@ public:
         }
         else
         {
-            this->size = 2;
+            this->size = 1;
         }
     }
 };
@@ -263,7 +269,7 @@ public:
 class OUT : public Instruction
 {
 public:
-    OUT(string opcode)
+    OUT(string opcode, string buffer)
     {
 
         this->getBasicInfo("OUT", opcode);
@@ -281,7 +287,7 @@ public:
 class XLAT : public Instruction
 {
 public:
-    XLAT(string opcode)
+    XLAT(string opcode, string buffer)
     {
 
         this->getBasicInfo("XLAT", opcode);
@@ -292,7 +298,7 @@ public:
 class LEA : public Instruction
 {
 public:
-    LEA(string opcode)
+    LEA(string opcode, string buffer)
     {
 
         this->getBasicInfo("LEA", opcode);
@@ -303,7 +309,7 @@ public:
 class LDS : public Instruction
 {
 public:
-    LDS(string opcode)
+    LDS(string opcode, string buffer)
     {
 
         this->getBasicInfo("LDS", opcode);
@@ -314,7 +320,7 @@ public:
 class LES : public Instruction
 {
 public:
-    LES(string opcode)
+    LES(string opcode, string buffer)
     {
 
         this->getBasicInfo("LES", opcode);
@@ -325,7 +331,7 @@ public:
 class LAHF : public Instruction
 {
 public:
-    LAHF(string opcode)
+    LAHF(string opcode, string buffer)
     {
 
         this->getBasicInfo("LAHF", opcode);
@@ -336,7 +342,7 @@ public:
 class SAHF : public Instruction
 {
 public:
-    SAHF(string opcode)
+    SAHF(string opcode, string buffer)
     {
 
         this->getBasicInfo("SAHF", opcode);
@@ -347,7 +353,7 @@ public:
 class PUSHF : public Instruction
 {
 public:
-    PUSHF(string opcode)
+    PUSHF(string opcode, string buffer)
     {
 
         this->getBasicInfo("PUSHF", opcode);
@@ -358,7 +364,7 @@ public:
 class POPF : public Instruction
 {
 public:
-    POPF(string opcode)
+    POPF(string opcode, string buffer)
     {
 
         this->getBasicInfo("POPF", opcode);
@@ -370,7 +376,7 @@ public:
 class ADD : public Instruction
 {
 public:
-    ADD(string opcode)
+    ADD(string opcode, string buffer)
     {
 
         this->getBasicInfo("ADD", opcode);
@@ -380,6 +386,14 @@ public:
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
+            this->mod = buffer.substr(0, 2);
+            this->reg = buffer.substr(2, 3);
+            this->rm = buffer.substr(5, 3);
+
+            if (mod == "01")
+            {
+                this->size = 3;
+            }
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate to reg/mem
@@ -398,7 +412,7 @@ public:
 class ADC : public Instruction
 {
 public:
-    ADC(string opcode)
+    ADC(string opcode, string buffer)
     {
 
         this->getBasicInfo("ADC", opcode);
@@ -426,7 +440,7 @@ public:
 class INC : public Instruction
 {
 public:
-    INC(string opcode)
+    INC(string opcode, string buffer)
     {
 
         this->getBasicInfo("INC", opcode);
@@ -448,7 +462,7 @@ public:
 class AAA : public Instruction
 {
 public:
-    AAA(string opcode)
+    AAA(string opcode, string buffer)
     {
 
         this->getBasicInfo("AAA", opcode);
@@ -459,7 +473,7 @@ public:
 class BAA : public Instruction
 {
 public:
-    BAA(string opcode)
+    BAA(string opcode, string buffer)
     {
 
         this->getBasicInfo("BAA", opcode);
@@ -470,7 +484,7 @@ public:
 class SUB : public Instruction
 {
 public:
-    SUB(string opcode)
+    SUB(string opcode, string buffer)
     {
 
         this->getBasicInfo("SUB", opcode);
@@ -497,7 +511,7 @@ public:
 class SSB : public Instruction
 {
 public:
-    SSB(string opcode)
+    SSB(string opcode, string buffer)
     {
 
         this->getBasicInfo("SSB", opcode);
@@ -525,7 +539,7 @@ public:
 class DEC : public Instruction
 {
 public:
-    DEC(string opcode)
+    DEC(string opcode, string buffer)
     {
 
         this->getBasicInfo("DEC", opcode);
@@ -547,7 +561,7 @@ public:
 class NEG : public Instruction
 {
 public:
-    NEG(string opcode)
+    NEG(string opcode, string buffer)
     {
 
         this->getBasicInfo("NEG", opcode);
@@ -561,7 +575,7 @@ public:
 class CMP : public Instruction
 {
 public:
-    CMP(string opcode)
+    CMP(string opcode, string buffer)
     {
 
         this->getBasicInfo("CMP", opcode);
@@ -589,7 +603,7 @@ public:
 class AAS : public Instruction
 {
 public:
-    AAS(string opcode)
+    AAS(string opcode, string buffer)
     {
 
         this->getBasicInfo("AAS", opcode);
@@ -600,7 +614,7 @@ public:
 class DAS : public Instruction
 {
 public:
-    DAS(string opcode)
+    DAS(string opcode, string buffer)
     {
 
         this->getBasicInfo("DAS", opcode);
@@ -610,7 +624,7 @@ public:
 class MUL : public Instruction
 {
 public:
-    MUL(string opcode)
+    MUL(string opcode, string buffer)
     {
 
         this->getBasicInfo("MUL", opcode);
@@ -621,7 +635,7 @@ public:
 class IMUL : public Instruction
 {
 public:
-    IMUL(string opcode)
+    IMUL(string opcode, string buffer)
     {
 
         this->getBasicInfo("IMUL", opcode);
@@ -632,7 +646,7 @@ public:
 class AAM : public Instruction
 {
 public:
-    AAM(string opcode)
+    AAM(string opcode, string buffer)
     {
 
         this->getBasicInfo("AAM", opcode);
@@ -643,7 +657,7 @@ public:
 class DIV : public Instruction
 {
 public:
-    DIV(string opcode)
+    DIV(string opcode, string buffer)
     {
 
         this->getBasicInfo("DIV", opcode);
@@ -653,7 +667,7 @@ public:
 class IDIV : public Instruction
 {
 public:
-    IDIV(string opcode)
+    IDIV(string opcode, string buffer)
     {
 
         this->getBasicInfo("IDIV", opcode);
@@ -664,7 +678,7 @@ public:
 class AAD : public Instruction
 {
 public:
-    AAD(string opcode)
+    AAD(string opcode, string buffer)
     {
 
         this->getBasicInfo("AAD", opcode);
@@ -675,7 +689,7 @@ public:
 class CBW : public Instruction
 {
 public:
-    CBW(string opcode)
+    CBW(string opcode, string buffer)
     {
 
         this->getBasicInfo("CBW", opcode);
@@ -686,7 +700,7 @@ public:
 class CWD : public Instruction
 {
 public:
-    CWD(string opcode)
+    CWD(string opcode, string buffer)
     {
 
         this->getBasicInfo("CWD", opcode);
@@ -698,7 +712,7 @@ public:
 class NOT : public Instruction
 {
 public:
-    NOT(string opcode)
+    NOT(string opcode, string buffer)
     {
 
         this->getBasicInfo("NOT", opcode);
@@ -709,7 +723,7 @@ class SHIFT : public Instruction
 {
 public:
     SHIFT(){};
-    SHIFT(string opcode)
+    SHIFT(string opcode, string buffer)
     {
 
         this->getBasicInfo("SHIFT", opcode);
@@ -726,7 +740,7 @@ public:
 class SHL : public SHIFT
 {
 public:
-    SHL(string opcode)
+    SHL(string opcode, string buffer)
     {
 
         this->getBasicInfo("SHL", opcode);
@@ -738,7 +752,7 @@ public:
 class SHR : public SHIFT
 {
 public:
-    SHR(string opcode)
+    SHR(string opcode, string buffer)
     {
 
         this->getBasicInfo("SHR", opcode);
@@ -749,7 +763,7 @@ public:
 class SAR : public SHIFT
 {
 public:
-    SAR(string opcode)
+    SAR(string opcode, string buffer)
     {
 
         this->getBasicInfo("SAR", opcode);
@@ -760,7 +774,7 @@ public:
 class ROL : public SHIFT
 {
 public:
-    ROL(string opcode)
+    ROL(string opcode, string buffer)
     {
 
         this->getBasicInfo("ROL", opcode);
@@ -771,7 +785,7 @@ public:
 class ROR : public SHIFT
 {
 public:
-    ROR(string opcode)
+    ROR(string opcode, string buffer)
     {
 
         this->getBasicInfo("ROR", opcode);
@@ -782,7 +796,7 @@ public:
 class RCL : public SHIFT
 {
 public:
-    RCL(string opcode)
+    RCL(string opcode, string buffer)
     {
 
         this->getBasicInfo("RCL", opcode);
@@ -793,7 +807,7 @@ public:
 class RCR : public SHIFT
 {
 public:
-    RCR(string opcode)
+    RCR(string opcode, string buffer)
     {
 
         this->getBasicInfo("RCR", opcode);
@@ -805,7 +819,7 @@ public:
 class AND : public Instruction
 {
 public:
-    AND(string opcode)
+    AND(string opcode, string buffer)
     {
 
         this->getBasicInfo("AND", opcode);
@@ -831,7 +845,7 @@ public:
 class TEST : public Instruction
 {
 public:
-    TEST(string opcode)
+    TEST(string opcode, string buffer)
     {
         this->getBasicInfo("TEST", opcode);
         if (opcode.substr(0, 7) == "1000010")
@@ -855,7 +869,7 @@ public:
 class OR : public Instruction
 {
 public:
-    OR(string opcode)
+    OR(string opcode, string buffer)
     {
 
         this->getBasicInfo("OR", opcode);
@@ -881,7 +895,7 @@ public:
 class XOR : public Instruction
 {
 public:
-    XOR(string opcode)
+    XOR(string opcode, string buffer)
     {
 
         this->getBasicInfo("XOR", opcode);
@@ -907,7 +921,7 @@ public:
 class REP : public Instruction
 {
 public:
-    REP(string opcode)
+    REP(string opcode, string buffer)
     {
 
         this->getBasicInfo("REP", opcode);
@@ -919,7 +933,7 @@ public:
 class MOVS : public Instruction
 {
 public:
-    MOVS(string opcode)
+    MOVS(string opcode, string buffer)
     {
 
         this->getBasicInfo("MOVS", opcode);
@@ -931,7 +945,7 @@ public:
 class CMPS : public Instruction
 {
 public:
-    CMPS(string opcode)
+    CMPS(string opcode, string buffer)
     {
 
         this->getBasicInfo("CMPS", opcode);
@@ -943,7 +957,7 @@ public:
 class SCAS : public Instruction
 {
 public:
-    SCAS(string opcode)
+    SCAS(string opcode, string buffer)
     {
 
         this->getBasicInfo("SCAS", opcode);
@@ -955,7 +969,7 @@ public:
 class LODS : public Instruction
 {
 public:
-    LODS(string opcode)
+    LODS(string opcode, string buffer)
     {
 
         this->getBasicInfo("LODS", opcode);
@@ -967,7 +981,7 @@ public:
 class STOS : public Instruction
 {
 public:
-    STOS(string opcode)
+    STOS(string opcode, string buffer)
     {
 
         this->getBasicInfo("STOS", opcode);
@@ -979,19 +993,24 @@ public:
 class CALL : public Instruction
 {
 public:
-    CALL(string opcode)
+    CALL(string opcode, string buffer)
     {
-
         this->getBasicInfo("CALL", opcode);
-        this->size = 2;
-        this->w = opcode[7];
+        if (opcode == "11101000" || opcode == "10011010" || (opcode == "11111111" && buffer.substr(2, 3) == "011"))
+        {
+            this->size = 3;
+        }
+        else
+        {
+            this->size = 2;
+        }
     }
 };
 
 class JMP : public Instruction
 {
 public:
-    JMP(string opcode)
+    JMP(string opcode, string buffer)
     {
         this->getBasicInfo("JMP", opcode);
         if (opcode == "11101001" || opcode == " 11101010" || opcode == "11111111")
@@ -1008,7 +1027,7 @@ public:
 class RET : public Instruction
 {
 public:
-    RET(string opcode)
+    RET(string opcode, string buffer)
     {
         this->getBasicInfo("RET", opcode);
         if (opcode == "11000011" || opcode == "11001011")
@@ -1025,7 +1044,7 @@ public:
 class JE : public Instruction
 {
 public:
-    JE(string opcode)
+    JE(string opcode, string buffer)
     {
         this->getBasicInfo("JE", opcode);
         this->size = 2;
@@ -1035,7 +1054,7 @@ public:
 class JL : public Instruction
 {
 public:
-    JL(string opcode)
+    JL(string opcode, string buffer)
     {
         this->getBasicInfo("JL", opcode);
         this->size = 2;
@@ -1045,7 +1064,7 @@ public:
 class JLE : public Instruction
 {
 public:
-    JLE(string opcode)
+    JLE(string opcode, string buffer)
     {
         this->getBasicInfo("JLE", opcode);
         this->size = 2;
@@ -1055,7 +1074,7 @@ public:
 class JB : public Instruction
 {
 public:
-    JB(string opcode)
+    JB(string opcode, string buffer)
     {
         this->getBasicInfo("JB", opcode);
         this->size = 2;
@@ -1065,7 +1084,7 @@ public:
 class JBE : public Instruction
 {
 public:
-    JBE(string opcode)
+    JBE(string opcode, string buffer)
     {
         this->getBasicInfo("JBE", opcode);
         this->size = 2;
@@ -1075,7 +1094,7 @@ public:
 class JP : public Instruction
 {
 public:
-    JP(string opcode)
+    JP(string opcode, string buffer)
     {
         this->getBasicInfo("JP", opcode);
         this->size = 2;
@@ -1085,7 +1104,7 @@ public:
 class JO : public Instruction
 {
 public:
-    JO(string opcode)
+    JO(string opcode, string buffer)
     {
         this->getBasicInfo("JO", opcode);
         this->size = 2;
@@ -1095,7 +1114,7 @@ public:
 class JS : public Instruction
 {
 public:
-    JS(string opcode)
+    JS(string opcode, string buffer)
     {
         this->getBasicInfo("JS", opcode);
         this->size = 2;
@@ -1105,7 +1124,7 @@ public:
 class JNE : public Instruction
 {
 public:
-    JNE(string opcode)
+    JNE(string opcode, string buffer)
     {
         this->getBasicInfo("JNE", opcode);
         this->size = 2;
@@ -1115,7 +1134,7 @@ public:
 class JNL : public Instruction
 {
 public:
-    JNL(string opcode)
+    JNL(string opcode, string buffer)
     {
         this->getBasicInfo("JNL", opcode);
         this->size = 2;
@@ -1125,7 +1144,7 @@ public:
 class JNLE : public Instruction
 {
 public:
-    JNLE(string opcode)
+    JNLE(string opcode, string buffer)
     {
         this->getBasicInfo("JNLE", opcode);
         this->size = 2;
@@ -1135,7 +1154,7 @@ public:
 class JNB : public Instruction
 {
 public:
-    JNB(string opcode)
+    JNB(string opcode, string buffer)
     {
         this->getBasicInfo("JNB", opcode);
         this->size = 2;
@@ -1145,7 +1164,7 @@ public:
 class JNBE : public Instruction
 {
 public:
-    JNBE(string opcode)
+    JNBE(string opcode, string buffer)
     {
         this->getBasicInfo("JNBE", opcode);
         this->size = 2;
@@ -1155,7 +1174,7 @@ public:
 class JNP : public Instruction
 {
 public:
-    JNP(string opcode)
+    JNP(string opcode, string buffer)
     {
         this->getBasicInfo("JNP", opcode);
         this->size = 2;
@@ -1165,7 +1184,7 @@ public:
 class JNO : public Instruction
 {
 public:
-    JNO(string opcode)
+    JNO(string opcode, string buffer)
     {
         this->getBasicInfo("JNO", opcode);
         this->size = 2;
@@ -1175,7 +1194,7 @@ public:
 class JNS : public Instruction
 {
 public:
-    JNS(string opcode)
+    JNS(string opcode, string buffer)
     {
         this->getBasicInfo("JNS", opcode);
         this->size = 2;
@@ -1185,7 +1204,7 @@ public:
 class LOOP : public Instruction
 {
 public:
-    LOOP(string opcode)
+    LOOP(string opcode, string buffer)
     {
         this->getBasicInfo("LOOP", opcode);
         this->size = 2;
@@ -1195,7 +1214,7 @@ public:
 class LOOPZ : public Instruction
 {
 public:
-    LOOPZ(string opcode)
+    LOOPZ(string opcode, string buffer)
     {
         this->getBasicInfo("LOOPZ", opcode);
         this->size = 2;
@@ -1205,7 +1224,7 @@ public:
 class LOOPNZ : public Instruction
 {
 public:
-    LOOPNZ(string opcode)
+    LOOPNZ(string opcode, string buffer)
     {
         this->getBasicInfo("LOOPNZ", opcode);
         this->size = 2;
@@ -1215,7 +1234,7 @@ public:
 class JCXZ : public Instruction
 {
 public:
-    JCXZ(string opcode)
+    JCXZ(string opcode, string buffer)
     {
         this->getBasicInfo("JCXZ", opcode);
         this->size = 2;
@@ -1225,7 +1244,7 @@ public:
 class INT : public Instruction
 {
 public:
-    INT(string opcode)
+    INT(string opcode, string buffer)
     {
         this->getBasicInfo("INT", opcode);
         if (opcode == "11001101")
@@ -1242,7 +1261,7 @@ public:
 class INTO : public Instruction
 {
 public:
-    INTO(string opcode)
+    INTO(string opcode, string buffer)
     {
         this->getBasicInfo("INTO", opcode);
         this->size = 1;
@@ -1252,7 +1271,7 @@ public:
 class IRET : public Instruction
 {
 public:
-    IRET(string opcode)
+    IRET(string opcode, string buffer)
     {
         this->getBasicInfo("IRET", opcode);
         this->size = 1;
@@ -1263,7 +1282,7 @@ public:
 class CLC : public Instruction
 {
 public:
-    CLC(string opcode)
+    CLC(string opcode, string buffer)
     {
         this->getBasicInfo("CLC", opcode);
         this->size = 1;
@@ -1273,7 +1292,7 @@ public:
 class CMC : public Instruction
 {
 public:
-    CMC(string opcode)
+    CMC(string opcode, string buffer)
     {
         this->getBasicInfo("CMC", opcode);
         this->size = 1;
@@ -1283,7 +1302,7 @@ public:
 class STC : public Instruction
 {
 public:
-    STC(string opcode)
+    STC(string opcode, string buffer)
     {
         this->getBasicInfo("STC", opcode);
         this->size = 1;
@@ -1293,7 +1312,7 @@ public:
 class CLD : public Instruction
 {
 public:
-    CLD(string opcode)
+    CLD(string opcode, string buffer)
     {
         this->getBasicInfo("CLD", opcode);
         this->size = 1;
@@ -1303,7 +1322,7 @@ public:
 class STD : public Instruction
 {
 public:
-    STD(string opcode)
+    STD(string opcode, string buffer)
     {
         this->getBasicInfo("STD", opcode);
         this->size = 1;
@@ -1313,7 +1332,7 @@ public:
 class CLI : public Instruction
 {
 public:
-    CLI(string opcode)
+    CLI(string opcode, string buffer)
     {
         this->getBasicInfo("CLI", opcode);
         this->size = 1;
@@ -1323,7 +1342,7 @@ public:
 class STI : public Instruction
 {
 public:
-    STI(string opcode)
+    STI(string opcode, string buffer)
     {
         this->getBasicInfo("STI", opcode);
         this->size = 1;
@@ -1333,7 +1352,7 @@ public:
 class HLT : public Instruction
 {
 public:
-    HLT(string opcode)
+    HLT(string opcode, string buffer)
     {
         this->getBasicInfo("HLT", opcode);
         this->size = 1;
@@ -1343,7 +1362,7 @@ public:
 class WAIT : public Instruction
 {
 public:
-    WAIT(string opcode)
+    WAIT(string opcode, string buffer)
     {
         this->getBasicInfo("WAIT", opcode);
         this->size = 1;
@@ -1353,7 +1372,7 @@ public:
 class ESC : public Instruction
 {
 public:
-    ESC(string opcode)
+    ESC(string opcode, string buffer)
     {
         this->getBasicInfo("ESC", opcode);
         this->size = 2;
@@ -1363,7 +1382,7 @@ public:
 class LOCK : public Instruction
 {
 public:
-    LOCK(string opcode)
+    LOCK(string opcode, string buffer)
     {
         this->getBasicInfo("LOCK", opcode);
         this->size = 1;
