@@ -26,7 +26,7 @@ map<string, Instruction *(*)(string, string)> bit7_1ConflictMap = {
     {"000", &createADD},
     {"010", &createADC},
     {"101", &createSUB},
-    {"011", &createSSB},
+    {"011", &createSBB},
     {"111", &createCMP},
     {"100", &createAND},
     {"001", &createOR},
@@ -114,9 +114,9 @@ void printInst(Instruction *inst)
     {
         out += " ";
     }
-    cout << out << inst->name << endl;
+    cout << out << inst->name << " " << inst->getPayloadInfo() << endl;
 }
-vector<int> fileReader(string name)
+vector<Instruction *> fileReader(string name)
 {
     string line;
     int byteCount = 0;
@@ -148,7 +148,7 @@ vector<int> fileReader(string name)
     string buffer = "";
     int address = 0;
     string opcode = "";
-    vector<int> instructions;
+    vector<Instruction *> instructions;
     vector<string> payload;
 
     Instruction *inst;
@@ -162,9 +162,6 @@ vector<int> fileReader(string name)
             opcode = lines.at(address);
             buffer = lines.at(address + 1);
 
-            // cout << "opcode: " << hex << stoll(opcode, NULL, 2)
-            //      << " | buffer: " << hex << stoll(buffer, NULL, 2) << endl;
-
             payload.clear();
 
             int opcodeCount = 8;
@@ -175,7 +172,7 @@ vector<int> fileReader(string name)
                 opcodeCount--;
                 if (opcodeCount == 0)
                 {
-                    cout << "not find" << endl;
+                    // cout << "not find" << endl;
                     break;
                 }
                 subOpcode = opcode.substr(0, opcodeCount);
@@ -187,6 +184,7 @@ vector<int> fileReader(string name)
                 inst = checkConflict(inst, buffer);
                 inst->setAddress(address);
                 payloadSize = inst->size - 1;
+                instructions.push_back(inst);
                 if (payloadSize == 0)
                 {
                     opcode = "";
@@ -226,11 +224,11 @@ int main(int argc, char *argv[])
 
     string name = argv[1];
     cout << "lendo o arquivo: " << name << endl;
-    vector<int> instructions = fileReader(name);
+    vector<Instruction *> instructions = fileReader(name);
 
-    // for (int i = 0; i < instructions.size(); i++)
-    //{
-    //     cout << instructions[i] << endl;
+    // for (Instruction *inst : instructions)
+    // {
+    //     printInst(inst);
     // }
 
     return 0;

@@ -45,9 +45,9 @@ inline Instruction *createSUB(string opcode, string buffer)
     return new SUB(opcode, buffer);
 }
 
-inline Instruction *createSSB(string opcode, string buffer)
+inline Instruction *createSBB(string opcode, string buffer)
 {
-    return new SSB(opcode, buffer);
+    return new SBB(opcode, buffer);
 }
 
 inline Instruction *createDEC(string opcode, string buffer)

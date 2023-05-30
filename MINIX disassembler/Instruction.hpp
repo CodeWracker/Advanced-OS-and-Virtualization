@@ -22,8 +22,41 @@ public:
     string mod;
     string rm;
     int address;
-
     vector<string> payload;
+    int subtype;
+
+    map<string, string> regMap1 = {
+        {"000", "AX"},
+        {"001", "CX"},
+        {"010", "DX"},
+        {"011", "BX"},
+        {"100", "SP"},
+        {"101", "BP"},
+        {"110", "SI"},
+        {"111", "DI"}};
+    map<string, string> regMap0 = {
+        {"000", "AL"},
+        {"001", "CL"},
+        {"010", "DL"},
+        {"011", "BL"},
+        {"100", "AH"},
+        {"101", "CH"},
+        {"110", "DH"},
+        {"111", "BH"}};
+
+    map<char, map<string, string>> RegMapChooserMap = {
+        {'0', regMap0},
+        {'1', regMap1}};
+
+    map<string, string> rmMap = {
+        {"000", "BX+SI"},
+        {"001", "BX+DI"},
+        {"010", "BP+SI"},
+        {"011", "BP+DI"},
+        {"100", "SI"},
+        {"101", "DI"},
+        {"110", "BP"},
+        {"111", "BX"}};
 
 public:
     Instruction(){};
@@ -37,6 +70,22 @@ public:
         this->name = name;
         this->opcode = opcode;
     }
+    virtual void getBufferInfo(string buffer, bool mod, bool reg, bool rm)
+    {
+        if (mod)
+        {
+            this->mod = buffer.substr(0, 2);
+        }
+        if (reg)
+        {
+            this->reg = buffer.substr(2, 3);
+        }
+        if (rm)
+        {
+            this->rm = buffer.substr(5, 3);
+        }
+    }
+
     virtual void checkWSize(char w, int size1, int size0)
     {
         if (w == '1')
@@ -96,6 +145,10 @@ public:
     {
         return this->name;
     }
+    virtual string getPayloadInfo()
+    {
+        return "";
+    };
     virtual ~Instruction(){};
 };
 
@@ -135,30 +188,41 @@ public:
         if (opcode == "10001110")
         {
             this->size = 2;
+            this->subtype = 5;
+            this->getBufferInfo(buffer, true, true, true);
         }
         else if (opcode == "10001100")
         {
             this->size = 2;
+            this->subtype = 6;
+            this->getBufferInfo(buffer, true, true, true);
         }
-        else if (opcode.substr(0, 4) == "1010")
+        else if (opcode.substr(0, 4) == "1010000")
         {
             this->w = opcode[7];
             this->size = 3;
+            this->subtype = 3;
+        }
+        else if (opcode.substr(0, 4) == "1010001")
+        {
+            this->w = opcode[7];
+            this->size = 3;
+            this->subtype = 4;
         }
         else if (opcode.substr(0, 4) == "1011") // imediate to register
         {
             this->w = opcode[4];
             this->reg = opcode.substr(5, 3);
             this->checkWSize(this->w, 3, 2);
+            this->subtype = 2;
         }
         else if (opcode.substr(0, 6) == "100010") // register/memmory to/from register
         {
             this->d = opcode[6];
             this->w = opcode[7];
             this->size = 2;
-            this->mod = buffer.substr(0, 2);
-            this->reg = buffer.substr(2, 3);
-            this->rm = buffer.substr(5, 3);
+            this->subtype = 0;
+            this->getBufferInfo(buffer, true, true, true);
             if (this->w == '1' && this->mod == "00" && this->rm == "110")
             {
                 this->size = 4;
@@ -167,13 +231,107 @@ public:
             {
                 this->size = 4;
             }
+            if (this->mod == "01")
+            {
+                this->size = 3;
+            }
         }
         else // immediate to register memmory
         {
             this->w = opcode[7];
+            this->subtype = 1;
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
     };
+    // override the getPayloadInfo
+    string getPayloadInfo()
+    {
+        string payloadInfo = "";
+        string p1, p2;
+        if (this->subtype == 5)
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            p2 = RegMapChooserMap[this->w][this->rm];
+            if (this->d == '0')
+            {
+                payloadInfo = p2 + ", " + p1;
+            }
+            else
+            {
+                payloadInfo = p1 + ", " + p2;
+            }
+        }
+        else if (this->subtype == 6)
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            p2 = RegMapChooserMap[this->w][this->rm];
+            if (this->d == '0')
+            {
+                payloadInfo = p2 + ", " + p1;
+            }
+            else
+            {
+                payloadInfo = p1 + ", " + p2;
+            }
+        }
+        else if (this->subtype == 3)
+        {
+            payloadInfo = "3";
+        }
+        else if (this->subtype == 4)
+        {
+            payloadInfo = "4";
+        }
+        else if (this->subtype == 2) // imediate to register
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            payloadInfo = p1 + ", ";
+            string hexPayload;
+            for (string str : this->payload)
+            {
+                stringstream s;
+                s << hex << stoll(str, NULL, 2);
+
+                // verify if s has 2 chars
+                if (s.str().size() == 1)
+                {
+                    s.str("0" + s.str());
+                }
+
+                hexPayload = hexPayload + s.str();
+            }
+            payloadInfo = payloadInfo + hexPayload.substr(2, 2) + hexPayload.substr(0, 2);
+        }
+        else if (this->subtype == 0) // register/memmory to/from register
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            if (this->d == '0')
+            {
+                p2 = RegMapChooserMap[this->w][this->rm];
+                payloadInfo = p2 + ", " + p1;
+            }
+            else
+            {
+                p2 = rmMap[this->rm];
+                payloadInfo = p1 + ", [" + p2 + "]";
+            }
+        }
+        else if (this->subtype == 1) // immediate to register memmory
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            p2 = RegMapChooserMap[this->w][this->rm];
+            if (this->d == '0')
+            {
+                payloadInfo = p2 + ", " + p1;
+            }
+            else
+            {
+                payloadInfo = p1 + ", " + p2;
+            }
+        }
+        return payloadInfo;
+    }
     ~MOV(){};
 };
 
@@ -186,6 +344,8 @@ public:
         if (opcode == "11111111")
         {
             this->size = 3;
+
+            this->getBufferInfo(buffer, true, false, true);
         }
         else if (opcode.substr(0, 5) == "01010")
         {
@@ -223,6 +383,8 @@ public:
             this->mod = opcode.substr(2, 2);
             this->rm = opcode.substr(4, 3);
             this->size = 2;
+
+            this->getBufferInfo(buffer, true, false, true);
         }
     }
 };
@@ -244,6 +406,7 @@ public:
             this->mod = opcode.substr(2, 2);
             this->rm = opcode.substr(4, 3);
             this->size = 2;
+            this->getBufferInfo(buffer, true, true, true);
         }
     }
 };
@@ -295,40 +458,81 @@ public:
     }
 };
 
-class LEA : public Instruction
+class LOAD : public Instruction
+{
+public:
+    LOAD(){};
+    LOAD(string opcode, string buffer)
+    {
+        this->getBasicInfo("LOAD", opcode);
+        this->size = 1;
+    }
+    virtual void getInfos(string opcode, string buffer)
+    {
+        this->getBufferInfo(buffer, true, true, true);
+        if (this->mod == "01")
+        {
+            this->size = 3;
+        }
+        else
+        {
+            this->size = 2;
+        }
+    }
+    virtual string getPayloadInfo()
+    {
+        string payloadInfo;
+        string p1, p2;
+        p1 = RegMapChooserMap['1'][this->reg];
+        if (this->mod == "01")
+        {
+            p2 = rmMap[this->rm];
+            stringstream disp;
+            disp << hex << stoll(this->payload[1], NULL, 2);
+            payloadInfo = p1 + ", [" + p2 + "+" + disp.str() + "]";
+        }
+        else
+        {
+            p2 = RegMapChooserMap[this->w][this->rm];
+            payloadInfo = p1 + ", " + p2;
+        }
+        return payloadInfo;
+    }
+};
+class LEA : public LOAD
 {
 public:
     LEA(string opcode, string buffer)
     {
 
         this->getBasicInfo("LEA", opcode);
-        this->size = 2 + 1;
-    }
+        this->getInfos(opcode, buffer);
+    };
 };
 
-class LDS : public Instruction
+class LDS : public LOAD
 {
 public:
     LDS(string opcode, string buffer)
     {
 
         this->getBasicInfo("LDS", opcode);
-        this->size = 2;
+        this->getInfos(opcode, buffer);
     }
 };
 
-class LES : public Instruction
+class LES : public LOAD
 {
 public:
     LES(string opcode, string buffer)
     {
 
         this->getBasicInfo("LES", opcode);
-        this->size = 2;
+        this->getInfos(opcode, buffer);
     }
 };
 
-class LAHF : public Instruction
+class LAHF : public LOAD
 {
 public:
     LAHF(string opcode, string buffer)
@@ -383,12 +587,12 @@ public:
         // reg/mem with register to either
         if (opcode.substr(0, 6) == "000000")
         {
+            this->subtype = 0;
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
-            this->mod = buffer.substr(0, 2);
-            this->reg = buffer.substr(2, 3);
-            this->rm = buffer.substr(5, 3);
+
+            this->getBufferInfo(buffer, true, true, true);
 
             if (mod == "01")
             {
@@ -397,16 +601,38 @@ public:
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate to reg/mem
+            this->subtype = 1;
             this->s = opcode[6];
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         { // immediate to acc
+            this->subtype = 2;
             this->w = opcode[7];
             this->checkWSize(this->w, 3, 2);
         }
     };
+    string getPayloadInfo()
+    {
+        string payloadInfo = "";
+        string p1, p2;
+        if (this->subtype == 0)
+        {
+            p1 = RegMapChooserMap[this->w][this->reg];
+            p2 = RegMapChooserMap[this->w][this->rm];
+            if (this->d == '0')
+            {
+                payloadInfo = p2 + ", " + p1;
+            }
+            else
+            {
+                payloadInfo = p1 + ", " + p2;
+            }
+        }
+        return payloadInfo;
+    }
 };
 
 class ADC : public Instruction
@@ -422,12 +648,14 @@ public:
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
+            this->getBufferInfo(buffer, true, true, true);
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate to reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         { // immediate to acc with carry
@@ -450,6 +678,7 @@ public:
             this->mod = opcode.substr(9, 3);
             this->rm = opcode.substr(12, 3);
             this->size = 2;
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         {
@@ -494,12 +723,14 @@ public:
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
+            this->getBufferInfo(buffer, true, true, true);
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate from reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         { // immediate from acc
@@ -508,25 +739,33 @@ public:
         }
     }
 };
-class SSB : public Instruction
+class SBB : public Instruction
 {
 public:
-    SSB(string opcode, string buffer)
+    SBB(string opcode, string buffer)
     {
 
-        this->getBasicInfo("SSB", opcode);
+        this->getBasicInfo("SBB", opcode);
         // reg/mem and register with borrow
         if (opcode.substr(0, 6) == "000110")
         {
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
+
+            this->getBufferInfo(buffer, true, true, true);
+
+            if (mod == "10")
+            {
+                this->size = 4;
+            }
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate from reg/mem with borrow
             this->s = opcode[6];
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         { // immediate from acc with borrow (WRONG!)
@@ -546,8 +785,8 @@ public:
         if (opcode.substr(0, 8) == "1111111")
         {
             this->w = opcode[8];
-            this->mod = opcode.substr(9, 3);
-            this->rm = opcode.substr(12, 3);
+
+            this->getBufferInfo(buffer, true, false, true);
             this->size = 2;
         }
         else
@@ -566,8 +805,8 @@ public:
 
         this->getBasicInfo("NEG", opcode);
         this->w = opcode[8];
-        this->mod = opcode.substr(9, 3);
-        this->rm = opcode.substr(12, 3);
+
+        this->getBufferInfo(buffer, true, false, true);
         this->size = 2;
     }
 };
@@ -580,23 +819,61 @@ public:
 
         this->getBasicInfo("CMP", opcode);
         // reg/mem and register
-        if (opcode.substr(0, 6) == "001111")
+        if (opcode.substr(0, 6) == "001110")
         {
             this->size = 2;
             this->d = opcode[6];
             this->w = opcode[7];
+            this->subtype = 0;
+            this->getBufferInfo(buffer, true, true, true);
         }
         else if (opcode.substr(0, 6) == "100000")
         { // immediate with reg/mem
             this->s = opcode[6];
             this->w = opcode[7];
+            this->subtype = 1;
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         { // immediate with acc
             this->w = opcode[7];
+            this->subtype = 2;
             this->checkWSize(this->w, 3, 2);
         }
+    };
+    string getPayloadInfo()
+    {
+        string payloadInfo = "";
+        string p1, p2;
+        if (this->subtype == 0)
+        {
+            payloadInfo = "1";
+        }
+        else if (this->subtype == 1)
+        {
+            p1 = this->RegMapChooserMap[this->w]["011"];
+            if (this->s == '0' && this->w == '1')
+            {
+                stringstream s1;
+                s1 << hex << stoll(this->payload[2], NULL, 2);
+                p2 = s1.str();
+                if (p2.length() == 1)
+                {
+                    p2 = "0" + p2;
+                }
+            }
+            stringstream s2;
+            s2 << hex << stoll(this->payload[1], NULL, 2);
+            p2 = p2 + s2.str();
+
+            payloadInfo = p1 + ", " + p2;
+        }
+        else
+        {
+            payloadInfo = "2";
+        }
+        return payloadInfo;
     }
 };
 
@@ -629,6 +906,7 @@ public:
 
         this->getBasicInfo("MUL", opcode);
         this->size = 2;
+        this->getBufferInfo(buffer, true, false, true);
     }
 };
 
@@ -640,6 +918,7 @@ public:
 
         this->getBasicInfo("IMUL", opcode);
         this->size = 2;
+        this->getBufferInfo(buffer, true, false, true);
     }
 };
 
@@ -661,6 +940,7 @@ public:
     {
 
         this->getBasicInfo("DIV", opcode);
+        this->getBufferInfo(buffer, true, false, true);
         this->size = 2;
     }
 };
@@ -671,6 +951,7 @@ public:
     {
 
         this->getBasicInfo("IDIV", opcode);
+        this->getBufferInfo(buffer, true, false, true);
         this->size = 2;
     }
 };
@@ -716,6 +997,7 @@ public:
     {
 
         this->getBasicInfo("NOT", opcode);
+        this->getBufferInfo(buffer, true, false, true);
         this->size = 2;
     }
 };
@@ -729,10 +1011,11 @@ public:
         this->getBasicInfo("SHIFT", opcode);
         this->size = 2;
     }
-    void getArgs()
+    void getArgs(string buffer)
     {
         this->v = opcode[6];
         this->w = opcode[7];
+        this->getBufferInfo(buffer, true, false, true);
     }
 
     virtual ~SHIFT(){};
@@ -745,7 +1028,7 @@ public:
 
         this->getBasicInfo("SHL", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 // create classes for all the shift instructions: SHR,SAR,ROL,ROR.RCL and RCR
@@ -757,7 +1040,7 @@ public:
 
         this->getBasicInfo("SHR", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 class SAR : public SHIFT
@@ -768,7 +1051,7 @@ public:
 
         this->getBasicInfo("SAR", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 class ROL : public SHIFT
@@ -779,7 +1062,7 @@ public:
 
         this->getBasicInfo("ROL", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 class ROR : public SHIFT
@@ -790,7 +1073,7 @@ public:
 
         this->getBasicInfo("ROR", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 class RCL : public SHIFT
@@ -801,7 +1084,7 @@ public:
 
         this->getBasicInfo("RCL", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 class RCR : public SHIFT
@@ -812,7 +1095,7 @@ public:
 
         this->getBasicInfo("RCR", opcode);
         this->size = 2;
-        this->getArgs();
+        this->getArgs(buffer);
     }
 };
 
@@ -827,12 +1110,14 @@ public:
         {
             this->d = opcode[6];
             this->w = opcode[7];
+            this->getBufferInfo(buffer, true, true, true);
             this->size = 2;
         }
         else if (opcode.substr(0, 6) == "100000")
         {
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         {
@@ -851,12 +1136,14 @@ public:
         if (opcode.substr(0, 7) == "1000010")
         {
             this->w = opcode[7];
+            this->getBufferInfo(buffer, true, true, true);
             this->size = 2;
         }
         else if (opcode.substr(0, 7) == "1111011")
         {
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         {
@@ -878,11 +1165,13 @@ public:
             this->d = opcode[6];
             this->w = opcode[7];
             this->size = 2;
+            this->getBufferInfo(buffer, true, true, true);
         }
         else if (opcode.substr(0, 7) == "1000000")
         {
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
         }
         else
         {
@@ -903,18 +1192,39 @@ public:
         {
             this->d = opcode[6];
             this->w = opcode[7];
+            this->getBufferInfo(buffer, true, true, true);
             this->size = 2;
+            this->subtype = 0;
         }
         else if (opcode.substr(0, 7) == "1000000")
         {
             this->w = opcode[7];
             this->checkWSize(this->w, 4, 3);
+            this->getBufferInfo(buffer, true, false, true);
+            this->subtype = 1;
         }
         else
         {
             this->w = opcode[7];
             this->checkWSize(this->w, 3, 2);
+
+            this->subtype = 3;
         }
+    };
+
+    string getPayloadInfo()
+    {
+
+        string payloadInfo = "";
+        string p1, p2;
+
+        if (this->subtype == 0)
+        {
+            p1 = this->RegMapChooserMap[this->w][this->reg];
+            p2 = this->RegMapChooserMap[this->w][this->rm];
+            payloadInfo = p1 + ", " + p2;
+        }
+        return payloadInfo;
     }
 };
 
@@ -996,6 +1306,10 @@ public:
     CALL(string opcode, string buffer)
     {
         this->getBasicInfo("CALL", opcode);
+        if (opcode == "11111111")
+        {
+            this->getBufferInfo(buffer, true, false, true);
+        }
         if (opcode == "11101000" || opcode == "10011010" || (opcode == "11111111" && buffer.substr(2, 3) == "011"))
         {
             this->size = 3;
@@ -1013,6 +1327,10 @@ public:
     JMP(string opcode, string buffer)
     {
         this->getBasicInfo("JMP", opcode);
+        if (opcode == "11111111")
+        {
+            this->getBufferInfo(buffer, true, false, true);
+        }
         if (opcode == "11101001" || opcode == " 11101010" || opcode == "11111111")
         {
             this->size = 3;
@@ -1375,6 +1693,7 @@ public:
     ESC(string opcode, string buffer)
     {
         this->getBasicInfo("ESC", opcode);
+        this->getBufferInfo(buffer, true, false, true);
         this->size = 2;
     }
 };
