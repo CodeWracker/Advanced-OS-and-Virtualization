@@ -44,7 +44,7 @@ public:
         {"110", "DH"},
         {"111", "BH"}};
 
-    map<char, map<string, string>> RegMapChooserMap = {
+    map<char, map<string, string>> regMapChooserMap = {
         {'0', regMap0},
         {'1', regMap1}};
 
@@ -251,8 +251,8 @@ public:
         string p1, p2;
         if (this->subtype == 5)
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
-            p2 = RegMapChooserMap[this->w][this->rm];
+            p1 = regMapChooserMap[this->w][this->reg];
+            p2 = regMapChooserMap[this->w][this->rm];
             if (this->d == '0')
             {
                 payloadInfo = p2 + ", " + p1;
@@ -264,8 +264,8 @@ public:
         }
         else if (this->subtype == 6)
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
-            p2 = RegMapChooserMap[this->w][this->rm];
+            p1 = regMapChooserMap[this->w][this->reg];
+            p2 = regMapChooserMap[this->w][this->rm];
             if (this->d == '0')
             {
                 payloadInfo = p2 + ", " + p1;
@@ -285,7 +285,7 @@ public:
         }
         else if (this->subtype == 2) // imediate to register
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
+            p1 = regMapChooserMap[this->w][this->reg];
             payloadInfo = p1 + ", ";
             string hexPayload;
             for (string str : this->payload)
@@ -305,10 +305,10 @@ public:
         }
         else if (this->subtype == 0) // register/memmory to/from register
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
+            p1 = regMapChooserMap[this->w][this->reg];
             if (this->d == '0')
             {
-                p2 = RegMapChooserMap[this->w][this->rm];
+                p2 = regMapChooserMap[this->w][this->rm];
                 payloadInfo = p2 + ", " + p1;
             }
             else
@@ -319,8 +319,8 @@ public:
         }
         else if (this->subtype == 1) // immediate to register memmory
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
-            p2 = RegMapChooserMap[this->w][this->rm];
+            p1 = regMapChooserMap[this->w][this->reg];
+            p2 = regMapChooserMap[this->w][this->rm];
             if (this->d == '0')
             {
                 payloadInfo = p2 + ", " + p1;
@@ -483,7 +483,7 @@ public:
     {
         string payloadInfo;
         string p1, p2;
-        p1 = RegMapChooserMap['1'][this->reg];
+        p1 = regMapChooserMap['1'][this->reg];
         if (this->mod == "01")
         {
             p2 = rmMap[this->rm];
@@ -493,7 +493,7 @@ public:
         }
         else
         {
-            p2 = RegMapChooserMap[this->w][this->rm];
+            p2 = regMapChooserMap[this->w][this->rm];
             payloadInfo = p1 + ", " + p2;
         }
         return payloadInfo;
@@ -620,8 +620,8 @@ public:
         string p1, p2;
         if (this->subtype == 0)
         {
-            p1 = RegMapChooserMap[this->w][this->reg];
-            p2 = RegMapChooserMap[this->w][this->rm];
+            p1 = regMapChooserMap[this->w][this->reg];
+            p2 = regMapChooserMap[this->w][this->rm];
             if (this->d == '0')
             {
                 payloadInfo = p2 + ", " + p1;
@@ -852,7 +852,7 @@ public:
         }
         else if (this->subtype == 1)
         {
-            p1 = this->RegMapChooserMap[this->w]["011"];
+            p1 = this->regMapChooserMap[this->w]["011"];
             if (this->s == '0' && this->w == '1')
             {
                 stringstream s1;
@@ -1220,8 +1220,8 @@ public:
 
         if (this->subtype == 0)
         {
-            p1 = this->RegMapChooserMap[this->w][this->reg];
-            p2 = this->RegMapChooserMap[this->w][this->rm];
+            p1 = this->regMapChooserMap[this->w][this->reg];
+            p2 = this->regMapChooserMap[this->w][this->rm];
             payloadInfo = p1 + ", " + p2;
         }
         return payloadInfo;
