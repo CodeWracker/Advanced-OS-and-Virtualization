@@ -80,16 +80,12 @@ Instruction *checkConflict(Instruction *inst, string buffer)
         else if (conflict->type == ConflictTypesEnum::ALL_1)
         {
             string p1 = buffer;
-            cout << "error all 1" << endl;
+            // cout << "error all 1" << endl;
             free(inst);
             // search in map
             if (all1ConflictMap.find(p1.substr(2, 3)) != all1ConflictMap.end())
             {
                 inst = all1ConflictMap[p1.substr(2, 3)](opcode, buffer);
-            }
-            else
-            {
-                cout << "error all 1 not find" << endl;
             }
         }
         else if (conflict->type == ConflictTypesEnum::TEST_MUL_OTHERS)
@@ -153,7 +149,7 @@ vector<Instruction *> fileReader(string name)
 
     Instruction *inst;
     int payloadSize;
-    cout << endl;
+    // cout << endl;
     while (address < lines.size() - 1)
     {
         if (opcode == "")
@@ -188,7 +184,7 @@ vector<Instruction *> fileReader(string name)
                 if (payloadSize == 0)
                 {
                     opcode = "";
-                    printInst(inst);
+                    // printInst(inst);
                     address++;
                     continue;
                 }
@@ -209,7 +205,7 @@ vector<Instruction *> fileReader(string name)
             {
 
                 inst->setPayload(payload);
-                printInst(inst);
+                // printInst(inst);
                 opcode = "";
             }
         }
@@ -223,13 +219,13 @@ int main(int argc, char *argv[])
 {
 
     string name = argv[1];
-    cout << "lendo o arquivo: " << name << endl;
+    // cout << "lendo o arquivo: " << name << endl;
     vector<Instruction *> instructions = fileReader(name);
 
-    // for (Instruction *inst : instructions)
-    // {
-    //     printInst(inst);
-    // }
+    for (Instruction *inst : instructions)
+    {
+        printInst(inst);
+    }
 
     return 0;
 }
