@@ -18,7 +18,7 @@ public:
     string getString();
 };
 
-class MemorySlot
+class WorkMemorySlot
 {
 public:
     string address;
@@ -29,16 +29,16 @@ public:
     string getString();
 };
 
-class MemoryTape
+class WorkMemoryTape
 {
 public:
-    vector<MemorySlot> memory;
+    vector<WorkMemorySlot> memory;
 
 public:
-    void addMemorySlot(MemorySlot memorySlot);
-    void removeMemorySlot(string address);
-    void updateMemorySlot(string address, MemorySlot memorySlot);
-    MemorySlot getMemorySlot(string address);
+    void addWorkMemorySlot(WorkMemorySlot work_memory_slot);
+    void removeWorkMemorySlot(string address);
+    void updateWorkMemorySlot(string address, WorkMemorySlot work_memory_slot);
+    WorkMemorySlot getWorkMemorySlot(string address);
     void clearMemory();
 };
 

@@ -1,4 +1,4 @@
-#include "memory.hpp"
+#include "workMemory.hpp"
 
 string AsseblyCode::getString()
 {
@@ -33,19 +33,19 @@ void AsseblyCode::setCode(string code)
     }
 }
 
-string MemorySlot::getString()
+string WorkMemorySlot::getString()
 {
     string str = "";
     str += address + ": " + hex_code + " " + assembly_code.getString();
     return str;
 }
 
-void MemoryTape::addMemorySlot(MemorySlot memorySlot)
+void WorkMemoryTape::addWorkMemorySlot(WorkMemorySlot WorkMemorySlot)
 {
-    memory.push_back(memorySlot);
+    memory.push_back(WorkMemorySlot);
 }
 
-void MemoryTape::removeMemorySlot(string address)
+void WorkMemoryTape::removeWorkMemorySlot(string address)
 {
     for (int i = 0; i < memory.size(); i++)
     {
@@ -57,19 +57,19 @@ void MemoryTape::removeMemorySlot(string address)
     }
 }
 
-void MemoryTape::updateMemorySlot(string address, MemorySlot memorySlot)
+void WorkMemoryTape::updateWorkMemorySlot(string address, WorkMemorySlot WorkMemorySlot)
 {
     for (int i = 0; i < memory.size(); i++)
     {
         if (memory[i].address == address)
         {
-            memory[i] = memorySlot;
+            memory[i] = WorkMemorySlot;
             break;
         }
     }
 }
 
-MemorySlot MemoryTape::getMemorySlot(string address)
+WorkMemorySlot WorkMemoryTape::getWorkMemorySlot(string address)
 {
     for (int i = 0; i < memory.size(); i++)
     {
@@ -78,12 +78,12 @@ MemorySlot MemoryTape::getMemorySlot(string address)
             return memory[i];
         }
     }
-    MemorySlot memorySlot;
-    memorySlot.address = "NULL";
-    return memorySlot;
+    WorkMemorySlot work_memory_slot;
+    work_memory_slot.address = "NULL";
+    return work_memory_slot;
 }
 
-void MemoryTape::clearMemory()
+void WorkMemoryTape::clearMemory()
 {
     memory.clear();
 }

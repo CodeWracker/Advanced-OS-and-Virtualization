@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
-#include "memory.hpp"
+#include "workMemory.hpp"
 
 vector<vector<string>> parseAssemblyFromMMVM(const string &command)
 {
@@ -77,25 +77,50 @@ vector<vector<string>> parseAssemblyFromMMVM(const string &command)
     return outputLines;
 }
 
-MemoryTape loadMemoryFromParser(vector<vector<string>> parseredCode)
+WorkMemoryTape loadMemoryFromParser(vector<vector<string>> parseredCode)
 {
     // Crie uma fita de memória
-    MemoryTape memoryTape;
+    WorkMemoryTape work_memory_tape;
     for (const auto &code : parseredCode)
     {
-        MemorySlot memorySlot;
-        memorySlot.address = code[0];
-        memorySlot.hex_code = code[1];
+        WorkMemorySlot work_memory_slot;
+        work_memory_slot.address = code[0];
+        work_memory_slot.hex_code = code[1];
         AsseblyCode assembly_code;
         assembly_code.setCode(code[2]);
         // printf("%s\n", assembly_code.getString().c_str());
 
-        memorySlot.assembly_code = assembly_code;
-        memoryTape.addMemorySlot(memorySlot);
+        work_memory_slot.assembly_code = assembly_code;
+        work_memory_tape.addWorkMemorySlot(work_memory_slot);
     }
 
     // Retorne a fita de memória
-    return memoryTape;
+    return work_memory_tape;
+}
+
+vector<int8_t> readBinaryFile(string path)
+{
+    // opens the file on the path
+    // creates a vector of int8_t
+    // load the bytes into the vector
+
+    vector<int8_t> binary_file;
+
+    ifstream file(path, ios::binary);
+    if (!file)
+    {
+        throw runtime_error("Falha ao abrir o arquivo");
+    }
+    if (file.is_open())
+    {
+        int8_t byte;
+        while (file.read((char *)&byte, sizeof(byte)))
+        {
+            binary_file.push_back(byte);
+        }
+    }
+    file.close();
+    return binary_file;
 }
 
 #endif // FUNCTIONS_HPP
