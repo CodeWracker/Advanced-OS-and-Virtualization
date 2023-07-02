@@ -12,6 +12,7 @@ public:
     string mnemonic;
     string operand1;
     string operand2;
+    string hex_code;
 
 public:
     void setCode(string code);

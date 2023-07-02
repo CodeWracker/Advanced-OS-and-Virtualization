@@ -65,6 +65,7 @@ vector<vector<string>> parseAssemblyFromMMVM(const string &command)
         vector<string> line;
         line.push_back(address);
         line.push_back(hex_code);
+        assembly_code.hex_code = hex_code;
         line.push_back(assembly_code);
         outputLines.push_back(line);
     }

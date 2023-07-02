@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "workMemory.hpp"
 
 class Register
 {
@@ -80,7 +81,13 @@ public:
     Register DS;
     Register ES;
     Register SS;
+    Register IP;
     Flags flags;
+    AsseblyCode lastInstruction;
+
+public:
+    string getStateHeader();
+    string getState();
 };
 
 #endif // PROCESSOR_HPP
