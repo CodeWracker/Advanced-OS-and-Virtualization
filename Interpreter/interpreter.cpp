@@ -11,7 +11,7 @@
 #include "header.hpp"
 using namespace std;
 
-void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
+void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
 {
     if (DEBUG)
     {
@@ -23,7 +23,7 @@ void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
         AssemblyCode instruction;
 
         // pega o valor do endereço usando o getRegisterValue e converte para hexadecimal em string
-        int16_t i_address = this->getRegisterValue("IP");
+        uint16_t i_address = this->getRegisterValue("IP");
         stringstream ss;
         ss << hex << i_address;
         string s_address_hex = ss.str();
@@ -37,6 +37,16 @@ void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
         // cout << s_address_hex << endl;
 
         instruction = work_memory.getWorkMemorySlot(s_address_hex).assembly_code;
+
+        // checa se encontrou a instrução
+        if (instruction.mnemonic == "NULL")
+        {
+            if (DEBUG)
+            {
+                cout << "Instruction not found" << endl;
+            }
+            break;
+        }
 
         // cout << instruction.getString() << endl;
 
@@ -52,17 +62,20 @@ void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
 
         // atualiza o IP
         // pega o valor da instrução e soma com o IP e depois soma 1
-        int16_t size_instruction = instruction.hex_code.size() / 2;
+        uint16_t size_instruction = instruction.hex_code.size() / 2;
+        // cout << size_instruction << endl;
+        // cout << this->IP.getRegister() << endl;
         this->IP.add(size_instruction);
+        // cout << this->IP.getRegister() << endl;
         // cout << "IP: " << this->IP.getRegister() << endl;
-        // if (this->IP.getRegister() > 3)
+        // if (this->IP.getRegister() > 140)
         // {
         //     break;
         // }
     }
 }
 
-void Processor::execute(AssemblyCode instruction, vector<int8_t> *data_memory)
+void Processor::execute(AssemblyCode instruction, vector<uint8_t> *data_memory)
 {
 
     // pega o mnemonico

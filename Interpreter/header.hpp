@@ -7,12 +7,12 @@
 class Header
 {
 public:
-    int8_t header_length;
+    uint8_t header_length;
     long text_length;
     long data_length;
 
 public:
-    void readHeader(vector<int8_t> binary_file)
+    void readHeader(vector<uint8_t> binary_file)
     {
         header_length = binary_file[4];
         // text_length is written from the 9th position (index 8) to the 12th position (index 11) but is written in reverse order

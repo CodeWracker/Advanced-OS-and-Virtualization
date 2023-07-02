@@ -6,37 +6,37 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-int16_t Register::getRegister()
+uint16_t Register::getRegister()
 {
-    return (int16_t)((high << 8) | low);
+    return (uint16_t)((high << 8) | low);
 }
 
-void Register::add(int16_t value)
+void Register::add(uint16_t value)
 {
-    int16_t result = getRegister() + value;
-    high = (int8_t)(result >> 8);
-    low = (int8_t)(result & 0x00FF);
+    int result = this->getRegister() + value;
+    high = (uint8_t)(result >> 8);
+    low = (uint8_t)(result & 0x00FF);
 }
 
-void Register::sub(int16_t value)
+void Register::sub(uint16_t value)
 {
-    int16_t result = getRegister() - value;
-    high = (int8_t)(result >> 8);
-    low = (int8_t)(result & 0x00FF);
+    uint16_t result = getRegister() - value;
+    high = (uint8_t)(result >> 8);
+    low = (uint8_t)(result & 0x00FF);
 }
 
-void Register::mul(int16_t value)
+void Register::mul(uint16_t value)
 {
-    int16_t result = getRegister() * value;
-    high = (int8_t)(result >> 8);
-    low = (int8_t)(result & 0x00FF);
+    uint16_t result = getRegister() * value;
+    high = (uint8_t)(result >> 8);
+    low = (uint8_t)(result & 0x00FF);
 }
 
-void Register::div(int16_t value)
+void Register::div(uint16_t value)
 {
-    int16_t result = getRegister() / value;
-    high = (int8_t)(result >> 8);
-    low = (int8_t)(result & 0x00FF);
+    uint16_t result = getRegister() / value;
+    high = (uint8_t)(result >> 8);
+    low = (uint8_t)(result & 0x00FF);
 }
 
 string Flags::getFlags()
@@ -48,7 +48,7 @@ string Flags::getFlags()
     return ss.str();
 }
 
-int16_t Processor::getRegisterValue(string reg)
+uint16_t Processor::getRegisterValue(string reg)
 {
     if (reg == "AX")
     {

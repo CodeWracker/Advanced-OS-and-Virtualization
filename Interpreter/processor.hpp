@@ -8,15 +8,15 @@
 class Register
 {
 public:
-    int8_t high;
-    int8_t low;
+    uint8_t high;
+    uint8_t low;
 
 public:
-    int16_t getRegister();
-    void add(int16_t value);
-    void sub(int16_t value);
-    void mul(int16_t value);
-    void div(int16_t value);
+    uint16_t getRegister();
+    void add(uint16_t value);
+    void sub(uint16_t value);
+    void mul(uint16_t value);
+    void div(uint16_t value);
 };
 
 class Flags
@@ -96,14 +96,14 @@ public:
     Processor();
     string getStateHeader();
     string getState();
-    void run(WorkMemoryTape work_memory, vector<int8_t> *data_memory);
-    void execute(AssemblyCode instruction, vector<int8_t> *data_memory);
-    int16_t getRegisterValue(string reg);
+    void run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory);
+    void execute(AssemblyCode instruction, vector<uint8_t> *data_memory);
+    uint16_t getRegisterValue(string reg);
 
 public:
     // instruções
-    void mov(string op1, string op2, vector<int8_t> *data_memory);
-    void interrupt(vector<int8_t> *data_memory);
+    void mov(string op1, string op2, vector<uint8_t> *data_memory);
+    void interrupt(vector<uint8_t> *data_memory);
 };
 
 #endif // PROCESSOR_HPP

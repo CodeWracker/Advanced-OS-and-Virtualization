@@ -80,6 +80,7 @@ WorkMemorySlot WorkMemoryTape::getWorkMemorySlot(string address)
     }
     WorkMemorySlot work_memory_slot;
     work_memory_slot.address = "NULL";
+    work_memory_slot.assembly_code.mnemonic = "NULL";
     return work_memory_slot;
 }
 

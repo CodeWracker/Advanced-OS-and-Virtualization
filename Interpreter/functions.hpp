@@ -99,13 +99,13 @@ WorkMemoryTape loadMemoryFromParser(vector<vector<string>> parseredCode)
     return work_memory_tape;
 }
 
-vector<int8_t> readBinaryFile(string path)
+vector<uint8_t> readBinaryFile(string path)
 {
     // opens the file on the path
-    // creates a vector of int8_t
+    // creates a vector of uint8_t
     // load the bytes into the vector
 
-    vector<int8_t> binary_file;
+    vector<uint8_t> binary_file;
 
     ifstream file(path, ios::binary);
     if (!file)
@@ -114,7 +114,7 @@ vector<int8_t> readBinaryFile(string path)
     }
     if (file.is_open())
     {
-        int8_t byte;
+        uint8_t byte;
         while (file.read((char *)&byte, sizeof(byte)))
         {
             binary_file.push_back(byte);
@@ -124,10 +124,10 @@ vector<int8_t> readBinaryFile(string path)
     return binary_file;
 }
 
-vector<int8_t> createMemoryTape(vector<int8_t> binary_file, Header header)
+vector<uint8_t> createMemoryTape(vector<uint8_t> binary_file, Header header)
 {
-    // cria a fita de memoria de dados (int8_t)
-    vector<int8_t> memory_tape;
+    // cria a fita de memoria de dados (uint8_t)
+    vector<uint8_t> memory_tape;
     int header_length = header.header_length;
     int text_length = header.text_length;
     int data_start = header_length + text_length;
@@ -139,7 +139,7 @@ vector<int8_t> createMemoryTape(vector<int8_t> binary_file, Header header)
     int new_index = 0;
     for (int i = data_start; i < data_start + data_length; i++)
     {
-        int8_t byte = binary_file[i];
+        uint8_t byte = binary_file[i];
         // cout << new_index << " - byte: " << (int)byte << " | " << byte << endl;
         memory_tape.push_back(byte);
         new_index++;

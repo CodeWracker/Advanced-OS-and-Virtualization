@@ -1,4 +1,5 @@
 #include "processor.hpp"
+#include "defines.hpp"
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -11,14 +12,15 @@
 #include "header.hpp"
 using namespace std;
 
-void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memory)
+void Processor::mov(string operand1, string operand2, vector<uint8_t> *data_memory)
 {
+
     // pega o valor do operando 2
     // verifica se o valor é um endereço ou não
     // se estiver entre [] é um endereço
-    int16_t word1;
-    int16_t word2;
-    int16_t address2;
+    uint16_t word1;
+    uint16_t word2;
+    uint16_t address2;
     if (operand2[0] == '[')
     {
         // pega o endereço
@@ -31,7 +33,7 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
             // pega o endereço
             s_address = s_address.substr(0, s_address.find('+'));
             // pega o valor do endereço registrador + offset
-            address2 = getRegisterValue(s_address) + stoi(s_offset);
+            address2 = getRegisterValue(s_address) + stoi(s_offset, nullptr, 16);
         }
         else if (s_address.find('-') != string::npos)
         {
@@ -41,7 +43,7 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
             s_address = s_address.substr(0, s_address.find('-'));
 
             // pega o valor do endereço registrador + offset
-            address2 = getRegisterValue(s_address) - stoi(s_offset);
+            address2 = getRegisterValue(s_address) - stoi(s_offset, nullptr, 16);
         }
         else
         {
@@ -54,14 +56,25 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
     }
     else
     {
-        // pega o valor que está em hexadecimal
-        word2 = stoi(operand2, nullptr, 16);
+        // verifica se é um registrador ou um numero em hexadecimal
+        // se o tamanho for 2 é um registrador
+        if (operand2.size() == 2)
+        {
+            // pega o valor do registrador
+            word2 = getRegisterValue(operand2);
+        }
+        else
+        {
+            // pega o valor do numero em hexadecimal
+            word2 = stoi(operand2, nullptr, 16);
+        }
     }
 
     // lida com o operando 1
     // verifica se o valor é um endereço ou não
     // se estiver entre [] é um endereço
     bool is_address = false;
+    // cout << operand1 << endl;
     if (operand1[0] == '[')
     {
         is_address = true;
@@ -70,23 +83,26 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
         // verifica se tem um offset (um + ou -)
         if (s_address1.find('+') != string::npos)
         {
+            // cout << operand1 << endl;
             // pega o offset
             string s_offset = s_address1.substr(s_address1.find('+') + 1);
             // pega o endereço
             s_address1 = s_address1.substr(0, s_address1.find('+'));
 
             // pega o valor do endereço registrador + offset
-            word1 = getRegisterValue(s_address1) + stoi(s_offset);
+            word1 = getRegisterValue(s_address1) + stoi(s_offset, nullptr, 16);
         }
         else if (s_address1.find('-') != string::npos)
         {
             // pega o offset
             string s_offset = s_address1.substr(s_address1.find('-') + 1);
+            // cout << s_offset << endl;
             // pega o endereço
             s_address1 = s_address1.substr(0, s_address1.find('-'));
 
             // pega o valor do endereço registrador - offset
-            word1 = getRegisterValue(s_address1) - stoi(s_offset);
+            // pega o valor em hexadecimal do offset
+            word1 = getRegisterValue(s_address1) - stoi(s_offset, nullptr, 16);
         }
         else
         {
@@ -208,14 +224,14 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
     }
 };
 
-void Processor::interrupt(vector<int8_t> *data_memory)
+void Processor::interrupt(vector<uint8_t> *data_memory)
 {
     // pega o valor no registrador BX
-    int16_t address = BX.high << 8 | BX.low;
+    uint16_t address = BX.high << 8 | BX.low;
 
     // pega os 2 primeiros parametros para o INT (cada parametro tem 2 bytes na memoria de dados) e eles estão escritos em LOW HIGH
-    int16_t param1 = (*data_memory)[address + 1] << 8 | (*data_memory)[address];
-    int16_t param2 = (*data_memory)[address + 3] << 8 | (*data_memory)[address + 2];
+    uint16_t param1 = (*data_memory)[address + 1] << 8 | (*data_memory)[address];
+    uint16_t param2 = (*data_memory)[address + 3] << 8 | (*data_memory)[address + 2];
 
     // verifica se é um WRITE ou um EXIT
 
@@ -223,18 +239,18 @@ void Processor::interrupt(vector<int8_t> *data_memory)
     if (param2 == 4)
     {
         // 3o parametro
-        int16_t param3 = (*data_memory)[address + 5] << 8 | (*data_memory)[address + 4];
+        uint16_t param3 = (*data_memory)[address + 5] << 8 | (*data_memory)[address + 4];
 
         // 4o parametro
         // o 4o parametro é o tamanho da string que vai ser printads
-        int16_t param4 = (*data_memory)[address + 7] << 8 | (*data_memory)[address + 6];
+        uint16_t param4 = (*data_memory)[address + 7] << 8 | (*data_memory)[address + 6];
 
         // 5o parametro
-        int16_t param5 = (*data_memory)[address + 9] << 8 | (*data_memory)[address + 8];
+        uint16_t param5 = (*data_memory)[address + 9] << 8 | (*data_memory)[address + 8];
 
         // 6o parametro
         // este é o endereço de onde começa o texto em ASCII
-        int16_t param6 = (*data_memory)[address + 11] << 8 | (*data_memory)[address + 10];
+        uint16_t param6 = (*data_memory)[address + 11] << 8 | (*data_memory)[address + 10];
 
         // loop na memoria de dados para printar o texto em ASCII
         for (int i = 0; i < param4; i++)
@@ -250,7 +266,10 @@ void Processor::interrupt(vector<int8_t> *data_memory)
     // EXIT
     else if (param2 == 1)
     {
-        cout << "EXIT CODE " << endl;
+        if (DEBUG)
+        {
+            cout << "EXIT CODE " << endl;
+        }
 
         // finaliza o programa
         exit(0);

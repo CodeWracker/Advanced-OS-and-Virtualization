@@ -22,14 +22,14 @@ int main(int argc, char *argv[])
     const string command = "mmvm -d " + name;
 
     // le o arquivo
-    vector<int8_t> file_bytes = readBinaryFile(name);
+    vector<uint8_t> file_bytes = readBinaryFile(name);
 
     // create a header
     Header header;
     header.readHeader(file_bytes);
 
-    // cria a fita de memoria de dados (int8_t)
-    vector<int8_t> data_memory_tape = createMemoryTape(file_bytes, header);
+    // cria a fita de memoria de dados (uint8_t)
+    vector<uint8_t> data_memory_tape = createMemoryTape(file_bytes, header);
 
     // [address, hex_code, assembly_code]
     vector<vector<string>> parseredCode = parseAssemblyFromMMVM(command);
