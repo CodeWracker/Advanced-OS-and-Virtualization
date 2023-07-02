@@ -103,6 +103,7 @@ public:
 public:
     // instruções
     void mov(string op1, string op2, vector<int8_t> *data_memory);
+    void interrupt(vector<int8_t> *data_memory);
 };
 
 #endif // PROCESSOR_HPP

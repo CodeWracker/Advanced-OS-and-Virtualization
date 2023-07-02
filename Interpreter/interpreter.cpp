@@ -55,7 +55,10 @@ void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
         int16_t size_instruction = instruction.hex_code.size() / 2;
         this->IP.add(size_instruction);
         // cout << "IP: " << this->IP.getRegister() << endl;
-        break;
+        // if (this->IP.getRegister() > 3)
+        // {
+        //     break;
+        // }
     }
 }
 
@@ -73,5 +76,9 @@ void Processor::execute(AssemblyCode instruction, vector<int8_t> *data_memory)
     if (mnemonic == "mov")
     {
         this->mov(operand1, operand2, data_memory);
+    }
+    else if (mnemonic == "int")
+    {
+        this->interrupt(data_memory);
     }
 }

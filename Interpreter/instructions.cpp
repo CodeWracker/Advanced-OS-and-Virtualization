@@ -206,4 +206,53 @@ void Processor::mov(string operand1, string operand2, vector<int8_t> *data_memor
             IP.low = word2 & 0xFF;
         }
     }
+};
+
+void Processor::interrupt(vector<int8_t> *data_memory)
+{
+    // pega o valor no registrador BX
+    int16_t address = BX.high << 8 | BX.low;
+
+    // pega os 2 primeiros parametros para o INT (cada parametro tem 2 bytes na memoria de dados) e eles estão escritos em LOW HIGH
+    int16_t param1 = (*data_memory)[address + 1] << 8 | (*data_memory)[address];
+    int16_t param2 = (*data_memory)[address + 3] << 8 | (*data_memory)[address + 2];
+
+    // verifica se é um WRITE ou um EXIT
+
+    // WRITE
+    if (param2 == 4)
+    {
+        // 3o parametro
+        int16_t param3 = (*data_memory)[address + 5] << 8 | (*data_memory)[address + 4];
+
+        // 4o parametro
+        // o 4o parametro é o tamanho da string que vai ser printads
+        int16_t param4 = (*data_memory)[address + 7] << 8 | (*data_memory)[address + 6];
+
+        // 5o parametro
+        int16_t param5 = (*data_memory)[address + 9] << 8 | (*data_memory)[address + 8];
+
+        // 6o parametro
+        // este é o endereço de onde começa o texto em ASCII
+        int16_t param6 = (*data_memory)[address + 11] << 8 | (*data_memory)[address + 10];
+
+        // loop na memoria de dados para printar o texto em ASCII
+        for (int i = 0; i < param4; i++)
+        {
+            // pega o valor do endereço
+            char word = (*data_memory)[param6 + i];
+
+            // printa o valor do endereço em ASCII
+            cout << (char)word;
+        }
+    }
+
+    // EXIT
+    else if (param2 == 1)
+    {
+        cout << "EXIT CODE " << endl;
+
+        // finaliza o programa
+        exit(0);
+    }
 }
