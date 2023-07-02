@@ -130,101 +130,12 @@ void Processor::mov(string operand1, string operand2, vector<uint8_t> *data_memo
     }
     else
     {
-        //  AX;
-        //  BX;
-        //  CX;
-        //  DX;
-        //  SP;
-        //  BP;
-        //  SI;
-        //  DI;
-        //  CS;
-        //  DS;
-        //  ES;
-        //  SS;
-        //  IP;
-        if (operand1 == "ax")
-        {
-            // atualiza o valor do registrador ax
-            AX.high = (word2 >> 8) & 0xFF;
-            AX.low = word2 & 0xFF;
-        }
-        else if (operand1 == "bx")
-        {
-            // atualiza o valor do registrador bx
-            BX.high = (word2 >> 8) & 0xFF;
-            BX.low = word2 & 0xFF;
-        }
-        else if (operand1 == "cx")
-        {
-            // atualiza o valor do registrador cx
-            CX.high = (word2 >> 8) & 0xFF;
-            CX.low = word2 & 0xFF;
-        }
-        else if (operand1 == "dx")
-        {
-            // atualiza o valor do registrador dx
-            DX.high = (word2 >> 8) & 0xFF;
-            DX.low = word2 & 0xFF;
-        }
-        else if (operand1 == "sp")
-        {
-            // atualiza o valor do registrador sp
-            SP.high = (word2 >> 8) & 0xFF;
-            SP.low = word2 & 0xFF;
-        }
-        else if (operand1 == "bp")
-        {
-            // atualiza o valor do registrador bp
-            BP.high = (word2 >> 8) & 0xFF;
-            BP.low = word2 & 0xFF;
-        }
-        else if (operand1 == "si")
-        {
-            // atualiza o valor do registrador si
-            SI.high = (word2 >> 8) & 0xFF;
-            SI.low = word2 & 0xFF;
-        }
-        else if (operand1 == "di")
-        {
-            // atualiza o valor do registrador di
-            DI.high = (word2 >> 8) & 0xFF;
-            DI.low = word2 & 0xFF;
-        }
-        else if (operand1 == "cs")
-        {
-            // atualiza o valor do registrador cs
-            CS.high = (word2 >> 8) & 0xFF;
-            CS.low = word2 & 0xFF;
-        }
-        else if (operand1 == "ds")
-        {
-            // atualiza o valor do registrador ds
-            DS.high = (word2 >> 8) & 0xFF;
-            DS.low = word2 & 0xFF;
-        }
-        else if (operand1 == "es")
-        {
-            // atualiza o valor do registrador es
-            ES.high = (word2 >> 8) & 0xFF;
-            ES.low = word2 & 0xFF;
-        }
-        else if (operand1 == "ss")
-        {
-            // atualiza o valor do registrador ss
-            SS.high = (word2 >> 8) & 0xFF;
-            SS.low = word2 & 0xFF;
-        }
-        else if (operand1 == "ip")
-        {
-            // atualiza o valor do registrador ip
-            IP.high = (word2 >> 8) & 0xFF;
-            IP.low = word2 & 0xFF;
-        }
+        // atualiza o valor do registrador
+        this->setRegisterValue(operand1, word2);
     }
 };
 
-void Processor::interrupt(vector<uint8_t> *data_memory)
+void Processor::int_(vector<uint8_t> *data_memory)
 {
     // pega o valor no registrador BX
     uint16_t address = BX.high << 8 | BX.low;
@@ -274,4 +185,21 @@ void Processor::interrupt(vector<uint8_t> *data_memory)
         // finaliza o programa
         exit(0);
     }
+}
+
+void Processor::xor_(string op1, string op2, vector<uint8_t> *data_memory)
+{
+    // ambos os operandos são registradores
+
+    // pega o valor que esta no registrador do operando 2
+    uint16_t value_src = this->getRegisterValue(op2);
+
+    // pega o valor que esta no registrador do operando 1
+    uint16_t value_dst = this->getRegisterValue(op1);
+
+    // faz o xor entre os valores dos registradores
+    uint16_t result = value_dst ^ value_src;
+
+    // atualiza o valor do registrador do operando 1 passando como parametro o nome do registrador em captal letter
+    this->setRegisterValue(op1, result);
 }

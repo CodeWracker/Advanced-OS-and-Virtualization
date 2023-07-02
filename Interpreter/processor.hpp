@@ -99,11 +99,13 @@ public:
     void run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory);
     void execute(AssemblyCode instruction, vector<uint8_t> *data_memory);
     uint16_t getRegisterValue(string reg);
+    void setRegisterValue(string reg, uint16_t value);
 
 public:
     // instruções
     void mov(string op1, string op2, vector<uint8_t> *data_memory);
-    void interrupt(vector<uint8_t> *data_memory);
+    void int_(vector<uint8_t> *data_memory);
+    void xor_(string op1, string op2, vector<uint8_t> *data_memory);
 };
 
 #endif // PROCESSOR_HPP

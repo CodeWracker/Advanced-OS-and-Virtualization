@@ -50,45 +50,127 @@ string Flags::getFlags()
 
 uint16_t Processor::getRegisterValue(string reg)
 {
-    if (reg == "AX")
+    if (reg == "ax")
     {
         return AX.getRegister();
     }
-    else if (reg == "BX")
+    else if (reg == "bx")
     {
         return BX.getRegister();
     }
-    else if (reg == "CX")
+    else if (reg == "cx")
     {
         return CX.getRegister();
     }
-    else if (reg == "DX")
+    else if (reg == "dx")
     {
         return DX.getRegister();
     }
-    else if (reg == "SP")
+    else if (reg == "sp")
     {
         return SP.getRegister();
     }
-    else if (reg == "BP")
+    else if (reg == "bp")
     {
         return BP.getRegister();
     }
-    else if (reg == "SI")
+    else if (reg == "si")
     {
         return SI.getRegister();
     }
-    else if (reg == "DI")
+    else if (reg == "di")
     {
         return DI.getRegister();
     }
-    else if (reg == "IP")
+    else if (reg == "ip")
     {
         return IP.getRegister();
     }
     else
     {
         return 0;
+    }
+}
+
+void Processor::setRegisterValue(string reg, uint16_t value)
+{
+    if (reg == "ax")
+    {
+        // atualiza o valor do registrador ax
+        AX.high = (value >> 8) & 0xFF;
+        AX.low = value & 0xFF;
+    }
+    else if (reg == "bx")
+    {
+        // atualiza o valor do registrador bx
+        BX.high = (value >> 8) & 0xFF;
+        BX.low = value & 0xFF;
+    }
+    else if (reg == "cx")
+    {
+        // atualiza o valor do registrador cx
+        CX.high = (value >> 8) & 0xFF;
+        CX.low = value & 0xFF;
+    }
+    else if (reg == "dx")
+    {
+        // atualiza o valor do registrador dx
+        DX.high = (value >> 8) & 0xFF;
+        DX.low = value & 0xFF;
+    }
+    else if (reg == "sp")
+    {
+        // atualiza o valor do registrador sp
+        SP.high = (value >> 8) & 0xFF;
+        SP.low = value & 0xFF;
+    }
+    else if (reg == "bp")
+    {
+        // atualiza o valor do registrador bp
+        BP.high = (value >> 8) & 0xFF;
+        BP.low = value & 0xFF;
+    }
+    else if (reg == "si")
+    {
+        // atualiza o valor do registrador si
+        SI.high = (value >> 8) & 0xFF;
+        SI.low = value & 0xFF;
+    }
+    else if (reg == "di")
+    {
+        // atualiza o valor do registrador di
+        DI.high = (value >> 8) & 0xFF;
+        DI.low = value & 0xFF;
+    }
+    else if (reg == "cs")
+    {
+        // atualiza o valor do registrador cs
+        CS.high = (value >> 8) & 0xFF;
+        CS.low = value & 0xFF;
+    }
+    else if (reg == "ds")
+    {
+        // atualiza o valor do registrador ds
+        DS.high = (value >> 8) & 0xFF;
+        DS.low = value & 0xFF;
+    }
+    else if (reg == "es")
+    {
+        // atualiza o valor do registrador es
+        ES.high = (value >> 8) & 0xFF;
+        ES.low = value & 0xFF;
+    }
+    else if (reg == "ss")
+    {
+        // atualiza o valor do registrador ss
+        SS.high = (value >> 8) & 0xFF;
+        SS.low = value & 0xFF;
+    }
+    else if (reg == "ip")
+    {
+        // atualiza o valor do registrador ip
+        IP.high = (value >> 8) & 0xFF;
+        IP.low = value & 0xFF;
     }
 }
 

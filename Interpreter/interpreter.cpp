@@ -23,7 +23,7 @@ void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
         AssemblyCode instruction;
 
         // pega o valor do endereço usando o getRegisterValue e converte para hexadecimal em string
-        uint16_t i_address = this->getRegisterValue("IP");
+        uint16_t i_address = this->getRegisterValue("ip");
         stringstream ss;
         ss << hex << i_address;
         string s_address_hex = ss.str();
@@ -92,6 +92,10 @@ void Processor::execute(AssemblyCode instruction, vector<uint8_t> *data_memory)
     }
     else if (mnemonic == "int")
     {
-        this->interrupt(data_memory);
+        this->int_(data_memory);
+    }
+    else if (mnemonic == "xor")
+    {
+        this->xor_(operand1, operand2, data_memory);
     }
 }
