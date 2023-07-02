@@ -200,6 +200,6 @@ void Processor::xor_(string op1, string op2, vector<uint8_t> *data_memory)
     // faz o xor entre os valores dos registradores
     uint16_t result = value_dst ^ value_src;
 
-    // atualiza o valor do registrador do operando 1 passando como parametro o nome do registrador em captal letter
+    // atualiza o valor do registrador do operando 1 passando como parametro o nome do registrador
     this->setRegisterValue(op1, result);
 }
