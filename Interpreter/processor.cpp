@@ -185,8 +185,10 @@ Processor::Processor()
     CX.low = 0;
     DX.high = 0;
     DX.low = 0;
-    SP.high = 0;
-    SP.low = 0;
+
+    SP.high = 255;
+    SP.low = 214;
+
     BP.high = 0;
     BP.low = 0;
     SI.high = 0;
