@@ -123,4 +123,27 @@ vector<int8_t> readBinaryFile(string path)
     return binary_file;
 }
 
+vector<int8_t> createMemoryTape(vector<int8_t> binary_file, Header header)
+{
+    // cria a fita de memoria de dados (int8_t)
+    vector<int8_t> memory_tape;
+    int header_length = header.header_length;
+    int text_length = header.text_length;
+    int data_start = header_length + text_length;
+    int data_length = header.data_length;
+
+    // carrega somente os dados do arquivo binario
+    cout << "data_start: " << data_start << endl;
+    cout << "data_length: " << data_length << endl;
+    int new_index = 0;
+    for (int i = data_start; i < data_start + data_length; i++)
+    {
+        int8_t byte = binary_file[i];
+        // cout << new_index << " - byte: " << (int)byte << " | " << byte << endl;
+        memory_tape.push_back(byte);
+        new_index++;
+    }
+    return memory_tape;
+}
+
 #endif // FUNCTIONS_HPP

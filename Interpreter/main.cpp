@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
     Header header;
     header.readHeader(file_bytes);
 
-    // print the header
-    cout << header.getString() << endl;
+    // cria a fita de memoria de dados (int8_t)
+    vector<int8_t> data_memory_tape = createMemoryTape(file_bytes, header);
 
     // [address, hex_code, assembly_code]
     vector<vector<string>> parseredCode = parseAssemblyFromMMVM(command);
