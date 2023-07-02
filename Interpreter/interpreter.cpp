@@ -51,7 +51,10 @@ void Processor::run(WorkMemoryTape work_memory, vector<int8_t> *data_memory)
         }
 
         // atualiza o IP
-        IP.add(1);
+        // pega o valor da instrução e soma com o IP e depois soma 1
+        int16_t size_instruction = instruction.hex_code.size() / 2;
+        this->IP.add(size_instruction);
+        // cout << "IP: " << this->IP.getRegister() << endl;
         break;
     }
 }
