@@ -1,6 +1,6 @@
 #ifndef HEADER_HPP
 #define HEADER_HPP
-
+#include "defines.hpp"
 #include <string>
 #include <vector>
 

@@ -1,6 +1,6 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
-
+#include "defines.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -65,7 +65,6 @@ vector<vector<string>> parseAssemblyFromMMVM(const string &command)
         vector<string> line;
         line.push_back(address);
         line.push_back(hex_code);
-        assembly_code.hex_code = hex_code;
         line.push_back(assembly_code);
         outputLines.push_back(line);
     }
@@ -87,8 +86,9 @@ WorkMemoryTape loadMemoryFromParser(vector<vector<string>> parseredCode)
         WorkMemorySlot work_memory_slot;
         work_memory_slot.address = code[0];
         work_memory_slot.hex_code = code[1];
-        AsseblyCode assembly_code;
+        AssemblyCode assembly_code;
         assembly_code.setCode(code[2]);
+        assembly_code.hex_code = code[1];
         // printf("%s\n", assembly_code.getString().c_str());
 
         work_memory_slot.assembly_code = assembly_code;
@@ -134,8 +134,8 @@ vector<int8_t> createMemoryTape(vector<int8_t> binary_file, Header header)
     int data_length = header.data_length;
 
     // carrega somente os dados do arquivo binario
-    cout << "data_start: " << data_start << endl;
-    cout << "data_length: " << data_length << endl;
+    // cout << "data_start: " << data_start << endl;
+    // cout << "data_length: " << data_length << endl;
     int new_index = 0;
     for (int i = data_start; i < data_start + data_length; i++)
     {

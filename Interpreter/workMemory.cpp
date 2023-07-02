@@ -1,6 +1,6 @@
 #include "workMemory.hpp"
 
-string AsseblyCode::getString()
+string AssemblyCode::getString()
 {
     string str = "";
     str += mnemonic;
@@ -15,7 +15,7 @@ string AsseblyCode::getString()
     return str;
 }
 
-void AsseblyCode::setCode(string code)
+void AssemblyCode::setCode(string code)
 {
     // MNEMONIC OPERAND1, OPERAND2
     mnemonic = code.substr(0, code.find(' '));

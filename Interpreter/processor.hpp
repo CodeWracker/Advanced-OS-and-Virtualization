@@ -1,6 +1,6 @@
 #ifndef PROCESSOR_HPP
 #define PROCESSOR_HPP
-
+#include "defines.hpp"
 #include <string>
 #include <vector>
 #include "workMemory.hpp"
@@ -13,6 +13,10 @@ public:
 
 public:
     int16_t getRegister();
+    void add(int16_t value);
+    void sub(int16_t value);
+    void mul(int16_t value);
+    void div(int16_t value);
 };
 
 class Flags
@@ -44,6 +48,9 @@ public:
     bool TF;
     bool IF;
     bool DF;
+
+public:
+    string getFlags();
 };
 
 class Processor
@@ -83,11 +90,19 @@ public:
     Register SS;
     Register IP;
     Flags flags;
-    AsseblyCode lastInstruction;
+    AssemblyCode lastInstruction;
 
 public:
+    Processor();
     string getStateHeader();
     string getState();
+    void run(WorkMemoryTape work_memory, vector<int8_t> *data_memory);
+    void execute(AssemblyCode instruction, vector<int8_t> *data_memory);
+    int16_t getRegisterValue(string reg);
+
+public:
+    // instruções
+    void mov(string op1, string op2, vector<int8_t> *data_memory);
 };
 
 #endif // PROCESSOR_HPP

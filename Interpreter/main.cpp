@@ -1,3 +1,5 @@
+#include "defines.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -40,6 +42,9 @@ int main(int argc, char *argv[])
 
     // Crie um objeto Processor
     Processor processor;
+
+    // simula o processador
+    processor.run(work_memory_tape, &data_memory_tape);
 
     return 0;
 }

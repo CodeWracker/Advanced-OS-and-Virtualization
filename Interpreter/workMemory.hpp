@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class AsseblyCode
+class AssemblyCode
 {
 public:
     string mnemonic;
@@ -24,7 +24,7 @@ class WorkMemorySlot
 public:
     string address;
     string hex_code;
-    AsseblyCode assembly_code;
+    AssemblyCode assembly_code;
 
 public:
     string getString();
