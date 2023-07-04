@@ -186,8 +186,8 @@ Processor::Processor()
     DX.high = 0;
     DX.low = 0;
 
-    SP.high = 255;
-    SP.low = 214;
+    SP.high = 0;
+    SP.low = 0;
 
     BP.high = 0;
     BP.low = 0;
@@ -206,6 +206,35 @@ Processor::Processor()
     flags.DF = 0;
     IP.high = 0;
     IP.low = 0;
+
+    // load physical memory as an vector  of size FFFFh and start with 0
+    this->physical_memory = vector<uint8_t>(0xFFFF, 0);
+}
+
+void Processor::load_memories(WorkMemoryTape work_memory_tape, vector<uint8_t> data_memory_tape)
+{
+    this->work_memory = work_memory_tape;
+
+    // carrega a memoria de dados na memoria fisica
+    int index;
+    for (index = 0; index < data_memory_tape.size(); index++)
+    {
+        this->physical_memory[index] = data_memory_tape[index];
+    }
+    // coloca a memoria de trabalho na fisica tb
+    // mas a de trabalho tem uma estrutura diferente, cada indice dela possui mais de 1 byte,então a cada indice da memoria de trabalho tem que contar quantos bytes tem nela e ai cortar eles e colocar de um em um na memoria fisica
+
+    for (int i = 0; i < work_memory_tape.memory.size(); i++)
+    {
+        string hex_bytes = work_memory_tape.memory[i].hex_code;
+        int num_bytes = hex_bytes.size() / 2;
+        for (int j = 0; j < num_bytes; j++)
+        {
+            string byte = hex_bytes.substr(j * 2, 2);
+            this->physical_memory[index] = stoi(byte, nullptr, 16);
+            index++;
+        }
+    }
 }
 
 string Processor::getStateHeader()

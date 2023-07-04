@@ -91,21 +91,25 @@ public:
     Register IP;
     Flags flags;
     AssemblyCode lastInstruction;
+    WorkMemoryTape work_memory;
+    vector<uint8_t> physical_memory;
 
 public:
     Processor();
+    void load_memories(WorkMemoryTape work_memory_tape, vector<uint8_t> data_memory_tape);
     string getStateHeader();
     string getState();
-    void run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory);
-    void execute(AssemblyCode instruction, vector<uint8_t> *data_memory);
+    void run();
+    void execute(AssemblyCode instruction);
     uint16_t getRegisterValue(string reg);
     void setRegisterValue(string reg, uint16_t value);
 
 public:
     // instruções
-    void mov(string op1, string op2, vector<uint8_t> *data_memory);
-    void int_(vector<uint8_t> *data_memory);
-    void xor_(string op1, string op2, vector<uint8_t> *data_memory);
+    void mov_(string op1, string op2);
+    void int_();
+    void xor_(string op1, string op2);
+    void sub_(string op1, string op2);
 };
 
 #endif // PROCESSOR_HPP

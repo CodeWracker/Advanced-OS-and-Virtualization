@@ -11,7 +11,7 @@
 #include "header.hpp"
 using namespace std;
 
-void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
+void Processor::run()
 {
     if (DEBUG)
     {
@@ -36,7 +36,7 @@ void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
 
         // cout << s_address_hex << endl;
 
-        instruction = work_memory.getWorkMemorySlot(s_address_hex).assembly_code;
+        instruction = this->work_memory.getWorkMemorySlot(s_address_hex).assembly_code;
 
         // checa se encontrou a instrução
         if (instruction.mnemonic == "NULL")
@@ -53,12 +53,12 @@ void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
         // atualiza a ultima instrução
         lastInstruction = instruction;
 
-        // executa a instrução
-        this->execute(instruction, data_memory);
         if (DEBUG)
         {
             cout << this->getState() << endl;
         }
+        // executa a instrução
+        this->execute(instruction);
 
         // atualiza o IP
         // pega o valor da instrução e soma com o IP e depois soma 1
@@ -75,7 +75,7 @@ void Processor::run(WorkMemoryTape work_memory, vector<uint8_t> *data_memory)
     }
 }
 
-void Processor::execute(AssemblyCode instruction, vector<uint8_t> *data_memory)
+void Processor::execute(AssemblyCode instruction)
 {
 
     // pega o mnemonico
@@ -88,14 +88,22 @@ void Processor::execute(AssemblyCode instruction, vector<uint8_t> *data_memory)
     // lida com os mnemonicos com o switch
     if (mnemonic == "mov")
     {
-        this->mov(operand1, operand2, data_memory);
+        this->mov_(operand1, operand2);
     }
     else if (mnemonic == "int")
     {
-        this->int_(data_memory);
+        this->int_();
     }
     else if (mnemonic == "xor")
     {
-        this->xor_(operand1, operand2, data_memory);
+        this->xor_(operand1, operand2);
+    }
+    else if (mnemonic == "sub")
+    {
+        this->sub_(operand1, operand2);
+    }
+    else
+    {
+        cout << "ainda não implementei o mnemonico " << mnemonic << endl;
     }
 }

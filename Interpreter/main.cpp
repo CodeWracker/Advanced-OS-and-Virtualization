@@ -43,8 +43,10 @@ int main(int argc, char *argv[])
     // Crie um objeto Processor
     Processor processor;
 
+    processor.load_memories(work_memory_tape, data_memory_tape);
+
     // simula o processador
-    processor.run(work_memory_tape, &data_memory_tape);
+    processor.run();
 
     return 0;
 }
