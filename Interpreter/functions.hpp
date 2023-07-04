@@ -140,7 +140,7 @@ vector<uint8_t> createMemoryTape(vector<uint8_t> binary_file, Header header)
     for (int i = data_start; i < data_start + data_length; i++)
     {
         uint8_t byte = binary_file[i];
-        cout << new_index << " - byte: " << (int)byte << " | " << byte << endl;
+        // cout << new_index << " - byte: " << (int)byte << " | " << byte << endl;
         memory_tape.push_back(byte);
         new_index++;
     }

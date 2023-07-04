@@ -268,8 +268,8 @@ void Processor::sub_(string op1, string op2)
     }
     // verifica se a fonte é um endereço ou um registrador
     bool src_is_addr = false;
-    uint16_t addr2;
-    uint16_t word2;
+    uint8_t addr2;
+    uint8_t word2;
     if (op2[0] == '[')
     {
         src_is_addr = true;
@@ -321,9 +321,9 @@ void Processor::sub_(string op1, string op2)
     else
     {
         // pega o valor do endereço só convertendo para inteiro
-        word2 = stoi(op2);
+        word2 = stoi(op2, nullptr, 16);
     }
-    uint16_t result;
+    uint8_t result;
     result = word1 - word2;
 
     // coloca o resultado no destino
