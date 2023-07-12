@@ -20,7 +20,8 @@ void Register::add(uint16_t value)
 
 void Register::sub(uint16_t value)
 {
-    uint16_t result = getRegister() - value;
+    // cout << this->getRegister() << " - " << value << endl;
+    uint16_t result = this->getRegister() - value;
     high = (uint8_t)(result >> 8);
     low = (uint8_t)(result & 0x00FF);
 }
@@ -238,19 +239,25 @@ void Processor::load_memories(WorkMemoryTape work_memory_tape, vector<uint8_t> d
 }
 void Processor::load_args(int qtd, char **args)
 {
+    // cout << this->SP.getRegister() << endl;
     // load the stack with the args byte by byte from the last byte of the last arg to the first byte of the first arg, then put the number of args in the stack. each slot is 2 bytes
     for (int i = qtd - 1; i >= 0; i--)
     {
         string arg = args[i];
+        int number = 0;
+        bool taking_number = false;
+        bool number_tooked = false;
         for (char c : arg)
         {
-            // cout << (int)c << "-" << c << "|" << endl;
-            if (c == ' ')
-            {
-                continue;
-            }
+
+            this->SP.sub(2);
+            stringstream ss;
+            ss << hex << uppercase;
+            ss << setw(4) << this->SP.getRegister() << " ";
+            string hex_sp = ss.str();
+            // cout << hex_sp << ": " << (int)c << "-" << c << "|" << endl;
             // save the byte in the stack using two positions
-            SP.sub(2);
+
             uint16_t word = c;
 
             this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
@@ -260,11 +267,11 @@ void Processor::load_args(int qtd, char **args)
             // cout << "mem[" << SP.getRegister() + 1 << "] = " << (int)this->physical_memory[SP.getRegister() + 1] << endl;
         }
         // save the byte in the stack using two positions
-        SP.sub(2);
-        uint16_t word = qtd;
-        this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
-        this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
     }
+    SP.sub(2);
+    uint16_t word = qtd;
+    this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
+    this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
 }
 
 string Processor::getStateHeader()

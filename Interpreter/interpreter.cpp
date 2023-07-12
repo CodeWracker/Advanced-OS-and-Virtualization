@@ -24,6 +24,7 @@ void Processor::run()
 
         // pega o valor do endereço usando o getRegisterValue e converte para hexadecimal em string
         uint16_t i_address = this->getRegisterValue("ip");
+        // cout << "IP: " << i_address << endl;
         stringstream ss;
         ss << hex << i_address;
         string s_address_hex = ss.str();
@@ -65,13 +66,11 @@ void Processor::run()
         uint16_t size_instruction = instruction.hex_code.size() / 2;
         // cout << size_instruction << endl;
         // cout << this->IP.getRegister() << endl;
-        this->IP.add(size_instruction);
-        // cout << this->IP.getRegister() << endl;
-        // cout << "IP: " << this->IP.getRegister() << endl;
-        // if (this->IP.getRegister() > 140)
-        // {
-        //     break;
-        // }
+        if (!this->flags.jump)
+        {
+            this->IP.add(size_instruction);
+        }
+        this->flags.jump = false;
     }
 }
 
@@ -109,6 +108,18 @@ void Processor::execute(AssemblyCode instruction)
     else if (mnemonic == "dec")
     {
         this->dec_(operand1);
+    }
+    else if (mnemonic == "add")
+    {
+        this->add_(operand1, operand2);
+    }
+    else if (mnemonic == "hlt")
+    {
+        this->hlt_();
+    }
+    else if (mnemonic == "jne")
+    {
+        this->jne_(operand1);
     }
     else
     {

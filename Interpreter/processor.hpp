@@ -48,6 +48,7 @@ public:
     bool TF;
     bool IF;
     bool DF;
+    bool jump;
 
 public:
     string getFlags();
@@ -74,6 +75,8 @@ class Processor
     - ES (Extra Segment)
     - SS (Stack Segment)
     */
+private:
+    void handle_operators_for_algebra(string op1, string op2, uint16_t *addr1, uint16_t *word1, bool *dest_is_addr, uint16_t *addr2, uint16_t *word2, bool *src_is_addr);
 
 public:
     Register AX;
@@ -111,8 +114,11 @@ public:
     void int_();
     void xor_(string op1, string op2);
     void sub_(string op1, string op2);
+    void add_(string op1, string op2);
     void pop_(string op1);
     void dec_(string op1);
+    void hlt_();
+    void jne_(string op1);
 };
 
 #endif // PROCESSOR_HPP
