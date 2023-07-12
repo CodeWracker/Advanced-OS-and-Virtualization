@@ -112,6 +112,7 @@ public:
     void xor_(string op1, string op2);
     void sub_(string op1, string op2);
     void pop_(string op1);
+    void dec_(string op1);
 };
 
 #endif // PROCESSOR_HPP

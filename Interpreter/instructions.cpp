@@ -356,3 +356,16 @@ void Processor::pop_(string op1)
     // put the value of the stack in the destination
     this->setRegisterValue(op1, word);
 }
+void Processor::dec_(string op1)
+{
+    // get the value of the destination
+    uint16_t value = this->getRegisterValue(op1);
+    // decrement the value
+    value--;
+    if (value == 0)
+    {
+        this->flags.ZF = 1;
+    }
+    // put the value in the destination
+    this->setRegisterValue(op1, value);
+}
