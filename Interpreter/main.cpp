@@ -16,6 +16,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    cout << argc << endl;
 
     string name = argv[1];
     // Chame o programa externo usando o comando desejado
@@ -42,8 +43,15 @@ int main(int argc, char *argv[])
 
     // Crie um objeto Processor
     Processor processor;
+    int qtd_of_args = argc - 1;
+    char *new_arg_list[qtd_of_args];
+    for (int i = 0; i < qtd_of_args; i++)
+    {
+        new_arg_list[i] = argv[i + 1];
+    }
 
     processor.load_memories(work_memory_tape, data_memory_tape);
+    processor.load_args(qtd_of_args, new_arg_list);
 
     // simula o processador
     processor.run();
