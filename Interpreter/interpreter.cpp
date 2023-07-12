@@ -102,6 +102,10 @@ void Processor::execute(AssemblyCode instruction)
     {
         this->sub_(operand1, operand2);
     }
+    else if (mnemonic == "pop")
+    {
+        this->pop_(operand1);
+    }
     else
     {
         cout << "ainda não implementei o mnemonico " << mnemonic << endl;

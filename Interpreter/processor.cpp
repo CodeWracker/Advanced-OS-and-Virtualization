@@ -244,17 +244,26 @@ void Processor::load_args(int qtd, char **args)
         string arg = args[i];
         for (char c : arg)
         {
+            // cout << (int)c << "-" << c << "|" << endl;
+            if (c == ' ')
+            {
+                continue;
+            }
             // save the byte in the stack using two positions
             SP.sub(2);
             uint16_t word = c;
-            this->physical_memory[SP.getRegister()] = word & 0xFF;
-            this->physical_memory[SP.getRegister() + 1] = (word >> 8) & 0xFF;
+
+            this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
+            // cout << "mem[" << SP.getRegister() << "] = " << (int)this->physical_memory[SP.getRegister()] << endl;
+
+            this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
+            // cout << "mem[" << SP.getRegister() + 1 << "] = " << (int)this->physical_memory[SP.getRegister() + 1] << endl;
         }
         // save the byte in the stack using two positions
         SP.sub(2);
         uint16_t word = qtd;
-        this->physical_memory[SP.getRegister()] = word & 0xFF;
-        this->physical_memory[SP.getRegister() + 1] = (word >> 8) & 0xFF;
+        this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
+        this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
     }
 }
 

@@ -341,3 +341,18 @@ void Processor::sub_(string op1, string op2)
         this->setRegisterValue(op1, result);
     }
 }
+void Processor::pop_(string op1)
+{
+    // get the value of the stack pointer
+    uint16_t sp = this->getRegisterValue("sp");
+    // get the value of the stack
+    // word = mem[sp]mem[sp+1]
+    // cout << "sp = " << (int)sp << endl;
+    // cout << "mem[sp] = " << (int)this->physical_memory[sp] << endl;
+    // cout << "mem[sp+1] = " << (int)this->physical_memory[sp + 1] << endl;
+    uint16_t word = this->physical_memory[sp] << 8 | this->physical_memory[sp + 1];
+    // increment the stack pointer
+    SP.add(2);
+    // put the value of the stack in the destination
+    this->setRegisterValue(op1, word);
+}

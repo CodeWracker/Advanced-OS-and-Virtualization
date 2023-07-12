@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
 {
     cout << argc << endl;
 
-    string name = argv[1];
+    // get the last argument
+    string name = argv[argc - 1];
     // Chame o programa externo usando o comando desejado
     const string command = "mmvm -d " + name;
 
