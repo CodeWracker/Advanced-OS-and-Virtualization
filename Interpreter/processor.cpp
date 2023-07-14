@@ -247,24 +247,42 @@ void Processor::load_args(int qtd, char **args)
         int number = 0;
         bool taking_number = false;
         bool number_tooked = false;
+        bool not_number = false;
         for (char c : arg)
         {
+
+            uint16_t word = c;
+            cout << (int)c << "-" << c << "|" << endl;
+            if (c >= '0' && c <= '9' && !taking_number && !not_number)
+            {
+                cout << "entrou" << endl;
+                taking_number = true;
+            }
+            else
+            {
+                not_number = true;
+            }
+            if (taking_number)
+            {
+                number = number * 10 + (c - '0'); // it multiply the number by 10, because the next number is in the next position, and then it adds the number in the ascii table
+                continue;
+            }
 
             this->SP.sub(2);
             stringstream ss;
             ss << hex << uppercase;
             ss << setw(4) << this->SP.getRegister() << " ";
             string hex_sp = ss.str();
-            // cout << hex_sp << ": " << (int)c << "-" << c << "|" << endl;
-            // save the byte in the stack using two positions
 
-            uint16_t word = c;
-
-            this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
-            // cout << "mem[" << SP.getRegister() << "] = " << (int)this->physical_memory[SP.getRegister()] << endl;
-
-            this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
-            // cout << "mem[" << SP.getRegister() + 1 << "] = " << (int)this->physical_memory[SP.getRegister() + 1] << endl;
+            this->physical_memory[this->SP.getRegister()] = word & 0xFF;
+            this->physical_memory[this->SP.getRegister() + 1] = (word >> 8) & 0xFF;
+        }
+        if (taking_number)
+        {
+            this->SP.sub(2);
+            uint16_t word = number;
+            this->physical_memory[this->SP.getRegister() + 1] = word & 0xFF;
+            this->physical_memory[this->SP.getRegister()] = (word >> 8) & 0xFF;
         }
         // save the byte in the stack using two positions
     }
