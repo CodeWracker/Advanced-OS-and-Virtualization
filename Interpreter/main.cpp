@@ -17,7 +17,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     // cout << argc << endl;
-
+    // cout << envp << endl;
     // get the last argument
     string name = argv[argc - 1];
     // Chame o programa externo usando o comando desejado

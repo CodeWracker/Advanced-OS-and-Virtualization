@@ -107,6 +107,7 @@ public:
     uint16_t getRegisterValue(string reg);
     void setRegisterValue(string reg, uint16_t value);
     void load_args(int argc, char *argv[]);
+    void put_on_stack(uint16_t value);
 
 public:
     // instruções

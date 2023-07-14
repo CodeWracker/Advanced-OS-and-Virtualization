@@ -239,59 +239,104 @@ void Processor::load_memories(WorkMemoryTape work_memory_tape, vector<uint8_t> d
 }
 void Processor::load_args(int qtd, char **args)
 {
-    // cout << this->SP.getRegister() << endl;
-    // load the stack with the args byte by byte from the last byte of the last arg to the first byte of the first arg, then put the number of args in the stack. each slot is 2 bytes
-    for (int i = qtd - 1; i >= 0; i--)
+    // loads the stack from the arguments
+    vector<char> stack;
+    // stack[0] is the top, stack[-1] is the bottom
+
+    stack.push_back((qtd >> 8) & 0xFF);
+    stack.push_back(qtd & 0xFF);
+    for (int i = 0; i < qtd; i++)
     {
         string arg = args[i];
-        int number = 0;
-        bool taking_number = false;
-        bool number_tooked = false;
-        bool not_number = false;
         for (char c : arg)
         {
-
-            uint16_t word = c;
-            cout << (int)c << "-" << c << "|" << endl;
-            if (c >= '0' && c <= '9' && !taking_number && !not_number)
-            {
-                cout << "entrou" << endl;
-                taking_number = true;
-            }
-            else
-            {
-                not_number = true;
-            }
-            if (taking_number)
-            {
-                number = number * 10 + (c - '0'); // it multiply the number by 10, because the next number is in the next position, and then it adds the number in the ascii table
-                continue;
-            }
-
-            this->SP.sub(2);
-            stringstream ss;
-            ss << hex << uppercase;
-            ss << setw(4) << this->SP.getRegister() << " ";
-            string hex_sp = ss.str();
-
-            this->physical_memory[this->SP.getRegister()] = word & 0xFF;
-            this->physical_memory[this->SP.getRegister() + 1] = (word >> 8) & 0xFF;
+            stack.push_back(c);
         }
-        if (taking_number)
-        {
-            this->SP.sub(2);
-            uint16_t word = number;
-            this->physical_memory[this->SP.getRegister() + 1] = word & 0xFF;
-            this->physical_memory[this->SP.getRegister()] = (word >> 8) & 0xFF;
-        }
-        // save the byte in the stack using two positions
     }
-    SP.sub(2);
-    uint16_t word = qtd;
-    this->physical_memory[SP.getRegister() + 1] = word & 0xFF;
-    this->physical_memory[SP.getRegister()] = (word >> 8) & 0xFF;
-}
 
+    // add the defaut args for the env variable
+    // [00,50, 41,54, 48,3d, 2f,73, 75,72, 3a,2f, 72,2f, 62,69, 6e,00]
+    stack.push_back(0x00);
+    stack.push_back(0x50);
+    stack.push_back(0x41);
+    stack.push_back(0x54);
+    stack.push_back(0x48);
+    stack.push_back(0x3d);
+    stack.push_back(0x2f);
+    stack.push_back(0x75);
+    stack.push_back(0x73);
+    stack.push_back(0x72);
+    stack.push_back(0x3a);
+    stack.push_back(0x2f);
+    stack.push_back(0x75);
+    stack.push_back(0x73);
+    stack.push_back(0x72);
+    stack.push_back(0x2f);
+    stack.push_back(0x62);
+    stack.push_back(0x69);
+    stack.push_back(0x6e);
+    stack.push_back(0x00);
+
+    // if the size of new stack is odd, add a 0x00 in the bottom to make it even
+    uint16_t start_env;
+    if (stack.size() % 2 == 1)
+    {
+        stack.push_back((char)0x00);
+        start_env = ((0 - 20) &
+                     0xFFFF);
+    }
+    else
+    {
+        start_env = ((0 - 18) &
+                     0xFFFF);
+    }
+
+    vector<uint16_t> new_stack;
+    uint16_t word;
+    bool half = false;
+    for (int i = 0; i < stack.size(); i++)
+    {
+        if (!half)
+        {
+            word = stack[i] << 8;
+            half = true;
+        }
+        else
+        {
+            // wor is inline or of word and the stack pos
+            word = word | (stack[i]);
+            new_stack.push_back(word);
+            half = false;
+        }
+    }
+    for (int i = new_stack.size() - 1; i >= 1; i--)
+    {
+
+        word = new_stack[i];
+        this->put_on_stack(word);
+    }
+    uint16_t start_args = this->SP.getRegister();
+    this->put_on_stack(0x0000);
+    this->put_on_stack((start_env << 8) + (start_env >> 8));
+
+    this->put_on_stack(0x0000);
+    this->put_on_stack((start_args << 8) + (start_args >> 8));
+
+    this->put_on_stack(qtd);
+}
+void Processor::put_on_stack(uint16_t word)
+{
+    this->SP.sub(2);
+    cout << (uint16_t)word << ":" << word << endl;
+
+    stringstream ss;
+    ss << hex << uppercase;
+    ss << setw(4) << this->SP.getRegister() << " ";
+    string hex_sp = ss.str();
+
+    this->physical_memory[this->SP.getRegister()] = word & 0xFF;
+    this->physical_memory[this->SP.getRegister() + 1] = (word >> 8) & 0xFF;
+}
 string Processor::getStateHeader()
 {
     return " AX   BX   CX   DX   SP   BP   SI   DI  FLAGS     IP";
