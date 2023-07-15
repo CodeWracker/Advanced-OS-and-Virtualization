@@ -153,117 +153,102 @@ void Processor::jne_(string operand1)
         this->flags.ZF = 0;
     }
 }
-void Processor::mov_(string operand1, string operand2)
+void Processor::jnb_(string op2)
 {
-
-    // pega o valor do operando 2
-    // verifica se o valor é um endereço ou não
-    // se estiver entre [] é um endereço
-    uint16_t word1;
-    uint16_t word2;
-    uint16_t address2;
-    if (operand2[0] == '[')
+    if (this->flags.CF == 0)
     {
-        // pega o endereço
-        string s_address = operand2.substr(1, operand2.size() - 2);
-        // verifica se tem um offset (um + ou -)
-        if (s_address.find('+') != string::npos)
-        {
-            // pega o offset
-            string s_offset = s_address.substr(s_address.find('+') + 1);
-            // pega o endereço
-            s_address = s_address.substr(0, s_address.find('+'));
-            // pega o valor do endereço registrador + offset
-            address2 = getRegisterValue(s_address) + stoi(s_offset, nullptr, 16);
-        }
-        else if (s_address.find('-') != string::npos)
-        {
-            // pega o offset
-            string s_offset = s_address.substr(s_address.find('-') + 1);
-            // pega o endereço
-            s_address = s_address.substr(0, s_address.find('-'));
+        uint16_t addr = stoi(op2, nullptr, 16);
+        this->IP.high = addr >> 8;
+        this->IP.low = addr & 0xFF;
+        // cout << this->IP.getRegister() << endl;
+        this->flags.jump = true;
+        this->flags.CF = 0;
+    }
+}
+void Processor::lea_(string op1, string op2)
+{
+    // op1 sempre é um registrador
+    // op 2 sempre é um registrador com offst de endereço[reg+-num]
+    // verifica se o destino é um endereço ou um registrador
 
-            // pega o valor do endereço registrador + offset
-            address2 = getRegisterValue(s_address) - stoi(s_offset, nullptr, 16);
-        }
-        else
-        {
-            // pega o valor do endereço
-            address2 = getRegisterValue(s_address);
-        }
-
-        // pega o valor que está no endereço
-        word2 = this->physical_memory[address2];
+    // pega o endereço
+    uint16_t addr;
+    // pega o offset
+    string offset;
+    if (op2.find('+') != string::npos)
+    {
+        // pega a posição do +
+        // faz uma substring do proximo caracter até o final - 1, pq ignoramos o ]
+        offset = op2.substr(op2.find('+') + 1, op2.size() - op2.find(']'));
+        string reg = op2.substr(1, op2.find('+') - 1);
+        uint16_t value = this->getRegisterValue(reg);
+        addr = value + stoi(offset, nullptr, 16);
     }
     else
     {
-        // verifica se é um registrador ou um numero em hexadecimal
-        // se o tamanho for 2 é um registrador
-        if (operand2.size() == 2)
-        {
-            // pega o valor do registrador
-            word2 = getRegisterValue(operand2);
-        }
-        else
-        {
-            // pega o valor do numero em hexadecimal
-            word2 = stoi(operand2, nullptr, 16);
-        }
+        // pega a posição do -
+        // faz uma substring do proximo caracter até o final - 1, pq ignoramos o ]
+        offset = op2.substr(op2.find('-') + 1, op2.size() - op2.find(']'));
+        string reg = op2.substr(1, op2.find('-') - 1);
+        uint16_t value = this->getRegisterValue(reg);
+        addr = value - stoi(offset, nullptr, 16);
     }
 
-    // lida com o operando 1
-    // verifica se o valor é um endereço ou não
-    // se estiver entre [] é um endereço
-    bool is_address = false;
-    // cout << operand1 << endl;
-    if (operand1[0] == '[')
+    // poe no registrador o endereço
+    this->setRegisterValue(op1, addr);
+}
+
+void Processor::cmp_(string op1, string op2)
+{
+    // verifica se o destino é um endereço ou um registrador
+    bool dest_is_addr = false;
+    uint16_t addr1;
+    uint16_t word1;
+    // verifica se a origem é um endereço ou um registrador
+    uint16_t addr2;
+    uint16_t word2;
+    bool src_is_addr = false;
+
+    handle_operators_for_algebra(op1, op2, &addr1, &word1, &dest_is_addr, &addr2, &word2, &src_is_addr);
+
+    // cout << "word1 = " << word1 << endl;
+    // cout << "word2 = " << word2 << endl;
+    // cout << "addr1 = " << addr1 << endl;
+    // cout << "addr2 = " << addr2 << endl;
+    // cout << "dest_is_addr = " << dest_is_addr << endl;
+    // cout << "src_is_addr = " << src_is_addr << endl;
+
+    if (word1 == word2)
     {
-        is_address = true;
-        // pega o endereço
-        string s_address1 = (operand1.substr(1, operand1.size() - 2));
-        // verifica se tem um offset (um + ou -)
-        if (s_address1.find('+') != string::npos)
-        {
-            // cout << operand1 << endl;
-            // pega o offset
-            string s_offset = s_address1.substr(s_address1.find('+') + 1);
-            // pega o endereço
-            s_address1 = s_address1.substr(0, s_address1.find('+'));
-
-            // pega o valor do endereço registrador + offset
-            word1 = getRegisterValue(s_address1) + stoi(s_offset, nullptr, 16);
-        }
-        else if (s_address1.find('-') != string::npos)
-        {
-            // pega o offset
-            string s_offset = s_address1.substr(s_address1.find('-') + 1);
-            // cout << s_offset << endl;
-            // pega o endereço
-            s_address1 = s_address1.substr(0, s_address1.find('-'));
-
-            // pega o valor do endereço registrador - offset
-            // pega o valor em hexadecimal do offset
-            word1 = getRegisterValue(s_address1) - stoi(s_offset, nullptr, 16);
-        }
-        else
-        {
-            // pega o valor do endereço
-            // verifica se é um registrador ou um numero em hexadecimal
-            // se o tamanho for 2 é um registrador
-            if (s_address1.size() == 2)
-            {
-                // pega o valor do registrador
-                word1 = getRegisterValue(s_address1);
-            }
-            else
-            {
-                // pega o valor do endereço só convertendo para inteiro
-                word1 = stoi(s_address1);
-            }
-        }
+        this->flags.ZF = 1;
+        return;
     }
+    if (word1 > word2)
+    {
+        return;
+    }
+    if (word1 < word2)
+    {
+        this->flags.CF = 1;
+        this->flags.SF = 1;
+    }
+}
 
-    if (is_address)
+void Processor::mov_(string op1, string op2)
+{
+
+    // verifica se o destino é um endereço ou um registrador
+    bool dest_is_addr = false;
+    uint16_t addr1;
+    uint16_t word1;
+    // verifica se a origem é um endereço ou um registrador
+    uint16_t addr2;
+    uint16_t word2;
+    bool src_is_addr = false;
+
+    handle_operators_for_algebra(op1, op2, &addr1, &word1, &dest_is_addr, &addr2, &word2, &src_is_addr);
+
+    if (dest_is_addr)
     {
         // atualiza o valor do endereço
         this->physical_memory[word1] = (word2 >> 8) & 0xFF;
@@ -272,7 +257,7 @@ void Processor::mov_(string operand1, string operand2)
     else
     {
         // atualiza o valor do registrador
-        this->setRegisterValue(operand1, word2);
+        this->setRegisterValue(op1, word2);
     }
 };
 

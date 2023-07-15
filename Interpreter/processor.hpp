@@ -120,6 +120,9 @@ public:
     void dec_(string op1);
     void hlt_();
     void jne_(string op1);
+    void lea_(string op1, string op2);
+    void cmp_(string op1, string op2);
+    void jnb_(string op1);
 };
 
 #endif // PROCESSOR_HPP

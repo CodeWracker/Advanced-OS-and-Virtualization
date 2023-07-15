@@ -44,7 +44,7 @@ string Flags::getFlags()
 {
     stringstream ss;
     // OF DF IF TF SF ZF AF PF CF
-    ss << OF << DF << IF << TF << SF << ZF << AF << PF << CF;
+    ss << (OF ? "O" : "-") << (DF ? "D" : "-") << (IF ? "I" : "-") << (TF ? "T" : "-") << (SF ? "S" : "-") << (ZF ? "Z" : "-") << (AF ? "A" : "-") << (PF ? "P" : "-") << (CF ? "C" : "-");
 
     return ss.str();
 }
@@ -221,6 +221,7 @@ void Processor::load_memories(WorkMemoryTape work_memory_tape, vector<uint8_t> d
     for (index = 0; index < data_memory_tape.size(); index++)
     {
         this->physical_memory[index] = data_memory_tape[index];
+        cout << "data memory " << index << " ->" << (int)data_memory_tape[index] << ":" << (char)data_memory_tape[index] << endl;
     }
     // coloca a memoria de trabalho na fisica tb
     // mas a de trabalho tem uma estrutura diferente, cada indice dela possui mais de 1 byte,então a cada indice da memoria de trabalho tem que contar quantos bytes tem nela e ai cortar eles e colocar de um em um na memoria fisica
@@ -327,7 +328,7 @@ void Processor::load_args(int qtd, char **args)
 void Processor::put_on_stack(uint16_t word)
 {
     this->SP.sub(2);
-    cout << (uint16_t)word << ":" << word << endl;
+    // cout << (uint16_t)word << ":" << word << endl;
 
     stringstream ss;
     ss << hex << uppercase;

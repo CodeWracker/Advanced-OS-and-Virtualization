@@ -121,6 +121,18 @@ void Processor::execute(AssemblyCode instruction)
     {
         this->jne_(operand1);
     }
+    else if (mnemonic == "lea")
+    {
+        this->lea_(operand1, operand2);
+    }
+    else if (mnemonic == "cmp")
+    {
+        this->cmp_(operand1, operand2);
+    }
+    else if (mnemonic == "jnb")
+    {
+        this->jnb_(operand2);
+    }
     else
     {
         cout << "ainda não implementei o mnemonico " << mnemonic << endl;
