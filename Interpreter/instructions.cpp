@@ -165,6 +165,25 @@ void Processor::jnb_(string op2)
         this->flags.CF = 0;
     }
 }
+void Processor::call_(string op2)
+{
+    uint16_t addr;
+    // verifica se o op2 é um numero
+    if (op2.size() == 2)
+    {
+        addr = getRegisterValue(op2);
+    }
+    else
+    {
+        addr = stoi(op2, nullptr, 16);
+    }
+    // pega o numero que ta no op2 em hexa
+    // poe no IP
+    this->IP.high = addr >> 8;
+    this->IP.low = addr & 0xFF;
+    this->flags.jump = true;
+}
+
 void Processor::test_(string op1, string op2)
 {
 
