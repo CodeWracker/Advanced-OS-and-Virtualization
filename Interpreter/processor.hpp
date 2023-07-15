@@ -123,6 +123,7 @@ public:
     void lea_(string op1, string op2);
     void cmp_(string op1, string op2);
     void jnb_(string op1);
+    void test_(string op1, string op2);
 };
 
 #endif // PROCESSOR_HPP

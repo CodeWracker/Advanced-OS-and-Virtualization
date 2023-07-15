@@ -133,6 +133,10 @@ void Processor::execute(AssemblyCode instruction)
     {
         this->jnb_(operand2);
     }
+    else if (mnemonic == "test")
+    {
+        this->test_(operand1, operand2);
+    }
     else
     {
         cout << "ainda não implementei o mnemonico " << mnemonic << endl;

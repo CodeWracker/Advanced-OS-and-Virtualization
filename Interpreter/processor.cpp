@@ -55,17 +55,65 @@ uint16_t Processor::getRegisterValue(string reg)
     {
         return AX.getRegister();
     }
+    else if (reg == "al")
+    {
+        return AX.low;
+    }
+    else if (reg == "ah")
+    {
+        return AX.high;
+    }
     else if (reg == "bx")
     {
         return BX.getRegister();
+    }
+    else if (reg == "bl")
+    {
+        return BX.low;
+    }
+    else if (reg == "bh")
+    {
+        return BX.high;
     }
     else if (reg == "cx")
     {
         return CX.getRegister();
     }
+    else if (reg == "cl")
+    {
+        return CX.low;
+    }
+    else if (reg == "ch")
+    {
+        return CX.high;
+    }
     else if (reg == "dx")
     {
         return DX.getRegister();
+    }
+    else if (reg == "dl")
+    {
+        return DX.low;
+    }
+    else if (reg == "dh")
+    {
+        return DX.high;
+    }
+    else if (reg == "cs")
+    {
+        return CS.getRegister();
+    }
+    else if (reg == "ds")
+    {
+        return DS.getRegister();
+    }
+    else if (reg == "es")
+    {
+        return ES.getRegister();
+    }
+    else if (reg == "ss")
+    {
+        return SS.getRegister();
     }
     else if (reg == "sp")
     {

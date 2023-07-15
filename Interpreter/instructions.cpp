@@ -165,6 +165,43 @@ void Processor::jnb_(string op2)
         this->flags.CF = 0;
     }
 }
+void Processor::test_(string op1, string op2)
+{
+
+    // set flags to 0
+    this->flags.CF = 0;
+    this->flags.SF = 0;
+    this->flags.ZF = 0;
+
+    // verifica se o destino é um endereço ou um registrador
+    bool dest_is_addr = false;
+    uint16_t addr1;
+    uint16_t word1;
+    // verifica se a origem é um endereço ou um registrador
+    uint16_t addr2;
+    uint16_t word2;
+    bool src_is_addr = false;
+
+    handle_operators_for_algebra(op1, op2, &addr1, &word1, &dest_is_addr, &addr2, &word2, &src_is_addr);
+
+    // cout << "word1 = " << word1 << endl;
+    // cout << "word2 = " << word2 << endl;
+    // cout << "addr1 = " << addr1 << endl;
+    // cout << "addr2 = " << addr2 << endl;
+    // cout << "dest_is_addr = " << dest_is_addr << endl;
+    // cout << "src_is_addr = " << src_is_addr << endl;
+
+    uint16_t result = word1 & word2;
+
+    if (result == 0)
+    {
+        this->flags.ZF = 1;
+    }
+    else
+    {
+        this->flags.ZF = 0;
+    }
+}
 void Processor::lea_(string op1, string op2)
 {
     // op1 sempre é um registrador
@@ -210,13 +247,6 @@ void Processor::cmp_(string op1, string op2)
     bool src_is_addr = false;
 
     handle_operators_for_algebra(op1, op2, &addr1, &word1, &dest_is_addr, &addr2, &word2, &src_is_addr);
-
-    // cout << "word1 = " << word1 << endl;
-    // cout << "word2 = " << word2 << endl;
-    // cout << "addr1 = " << addr1 << endl;
-    // cout << "addr2 = " << addr2 << endl;
-    // cout << "dest_is_addr = " << dest_is_addr << endl;
-    // cout << "src_is_addr = " << src_is_addr << endl;
 
     if (word1 == word2)
     {
