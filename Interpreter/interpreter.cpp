@@ -137,6 +137,10 @@ void Processor::execute(AssemblyCode instruction)
     {
         this->test_(operand1, operand2);
     }
+    else if (mnemonic == "push")
+    {
+        this->push_(operand1);
+    }
     else
     {
         cout << "ainda não implementei o mnemonico " << mnemonic << endl;

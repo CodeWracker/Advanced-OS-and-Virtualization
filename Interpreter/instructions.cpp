@@ -449,6 +449,47 @@ void Processor::pop_(string op1)
     // put the value of the stack in the destination
     this->setRegisterValue(op1, word);
 }
+void Processor::push_(string op2)
+{
+    // o op2 pode serum endereço ou um registrador
+    uint16_t value;
+    if (op2[0] == '[')
+    {
+        // verifica se tem um offset (um + ou -)
+        // pega o endereço
+        string s_address = (op2.substr(1, op2.size() - 2));
+        // verifica se tem +
+        if (s_address.find('+') != string::npos)
+        {
+            // pega o offset, td que vem depois do + no s_address
+            string s_offset = s_address.substr(s_address.find('+') + 1);
+            // pega o reg
+            string reg = s_address.substr(0, s_address.find('+'));
+            // pega o valor do endereço registrador + offset
+            value = getRegisterValue(reg) + stoi(s_offset, nullptr, 16);
+            cout << "address = " << s_address << endl;
+            cout << "offset = " << s_offset << endl;
+        }
+        else
+        {
+            // pega o offset, td que vem depois do - no s_address
+            string s_offset = s_address.substr(s_address.find('-') + 1);
+            // pega o reg
+            string reg = s_address.substr(0, s_address.find('-'));
+            // pega o valor do endereço registrador - offset
+            value = getRegisterValue(reg) - stoi(s_offset, nullptr, 16);
+            cout << "address = " << s_address << endl;
+            cout << "offset = " << s_offset << endl;
+        }
+    }
+    else
+    {
+        value = getRegisterValue(op2);
+    }
+    // cout << "value = " << value << endl;
+    this->put_on_stack(value);
+}
+
 void Processor::dec_(string op1)
 {
     // get the value of the destination

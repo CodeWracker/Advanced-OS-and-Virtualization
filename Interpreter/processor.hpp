@@ -124,6 +124,7 @@ public:
     void cmp_(string op1, string op2);
     void jnb_(string op1);
     void test_(string op1, string op2);
+    void push_(string op1);
 };
 
 #endif // PROCESSOR_HPP
